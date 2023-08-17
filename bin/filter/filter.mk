@@ -28,11 +28,12 @@ front_p=AGRGTTYGATYMTGGCTCAG
 #tail_p=RGYTACCTTGTTACGACTT
 tail_p=AAGTCGTAACAAGGTARCY
 cutadapt_cpu=3
+outdir=$(dir $(firstword $(outfq)))
 .PHONY:CutAdapt
 CutAdapt:
 	echo "############### CutAdapt start at `date` ###############"
+	mkdir -p $(outdir)
 	$(CUTADAPT) -g "$(front_p)...$(tail_p)" $(infq) -o $(outfq) -j $(cutadapt_cpu) --trimmed-only --revcomp -e 0.1 --json $(outjson)
-	#$(CUTADAPT) -g $(front_p) -a $(tail_p) $(infq) -o $(outfq) -j $(cutadapt_cpu) --trimmed-only --revcomp -e 0.1 --json $(outjson)
 	echo "############### CutAdapt end at `date` ###############"
 
 cutadapt_stat:
