@@ -30,7 +30,7 @@ CPU	1
 Major	T
 Order	2
 Depend	
-Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json front_p=Para_front_p_cutadap tail_p=Para_tail_p_cutadap CutAdapt
+Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fastq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json front_p=Para_front_p_cutadap tail_p=Para_tail_p_cutadap CutAdapt
 make -f BIN/filter/filter.mk software=Para_config cutadapt_json=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.stat sample=$(sample)[1] cutadapt_stat
 make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].fq.stat sample=$(sample)[1] fq_stat
 [Job End]
