@@ -49,8 +49,7 @@ collect_stat:
 
 fq_stat:
 	echo "############### fq_stat start at `date` ###############"
-	$(SEQKIT) fx2tab -j $(cpu) -q --gc -l -H -n -i $(infq) |\
-	$(CSVTK) mutate2 -C '%' -t -n sample -e '"${sample}"' > ${outfile}
+	$(SEQKIT) fx2tab -j $(cpu) -q --gc -l -H -n -i $(infq) |$(CSVTK) mutate2 -C '%' -t -n sample -e '"${sample}"' > ${outfile}
 
 collect_fq_stat:
 	echo "############### collect_fq_stat start at `date` ###############"
