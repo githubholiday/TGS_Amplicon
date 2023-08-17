@@ -44,7 +44,7 @@ HELP:
 outdir=$(dir $(firstword $(out_qza)))
 ImportQiime:
 	echo "############### ImportQiime start at `date` ###############"
-	mkdir -p $(outdir)
+	mkdir -p $(dir $(firstword $(out_qza)))
 	$(QIIME2) tools import --type 'SampleData[SequencesWithQuality]'  --input-path $(sample_list) --output-path $(out_qza) --input-format SingleEndFastqManifestPhred33V2
 	echo "############### ImportQiime end at `date` ###############"
 
