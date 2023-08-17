@@ -45,6 +45,7 @@ tax_maxaccept=100
 tax_identity=0.97
 tax_vsearch:
 	echo "############### tax_vsearch start at `date` ###############"
+	mkdir -p $(dir $(firstword $(tax_qza)))
 	$(QIIME2) feature-classifier classify-consensus-vsearch --i-query $(asv_seq) \
   	--o-classification $(tax_qza) \
 	--o-search-results $(tax_blast_qza) \
