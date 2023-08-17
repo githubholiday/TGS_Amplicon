@@ -28,11 +28,10 @@ front_p=AGRGTTYGATYMTGGCTCAG
 #tail_p=RGYTACCTTGTTACGACTT
 tail_p=AAGTCGTAACAAGGTARCY
 cutadapt_cpu=3
-outdir=$(dir $(firstword $(outfq)))
 .PHONY:CutAdapt
 CutAdapt:
 	echo "############### CutAdapt start at `date` ###############"
-	mkdir -p $(outdir)
+	mkdir -p$(dir $(firstword $(outfq)))
 	$(CUTADAPT) -g "$(front_p)...$(tail_p)" $(infq) -o $(outfq) -j $(cutadapt_cpu) --trimmed-only --revcomp -e 0.1 --json $(outjson)
 	echo "############### CutAdapt end at `date` ###############"
 
@@ -46,10 +45,9 @@ collect_stat:
 	$(CSVTK) concat -t -C "%" $(infile) > $(outfile)
 	echo "############### collect_stat end at `date` ###############"
 
-cpu=1
 fq_stat:
 	echo "############### fq_stat start at `date` ###############"
-	$(SEQKIT) fx2tab -j $(cpu) -q --gc -l -H -n -i $(infq) |$(CSVTK) mutate2 -C '%' -t -n sample -e '"${sample}"' > ${outfile}
+	$(SEQKIT) fx2tab -j 1 -q --gc -l -H -n -i $(infq) |$(CSVTK) mutate2 -C '%' -t -n sample -e '"${sample}"' > ${outfile}
 
 collect_fq_stat:
 	echo "############### collect_fq_stat start at `date` ###############"

@@ -41,7 +41,6 @@ HELP:
 	@echo -e "\t" "out_rep_qza: [字符串|必需]ASV序列输出文件，qza格式,导出是fasta格式"
 	@echo -e "\t" "out_stat_qza: [字符串|必需]ASV统计输出文件，qza格式"
 	
-outdir=$(dir $(firstword $(out_qza)))
 ImportQiime:
 	echo "############### ImportQiime start at `date` ###############"
 	mkdir -p $(dir $(firstword $(out_qza)))
@@ -55,10 +54,9 @@ denoise_max_ee=2
 cpu=10
 front_p=AGRGTTYGATYMTGGCTCAG
 tail_p=RGYTACCTTGTTACGACTT
-outdir=$(dir $(firstword $(out_table_qza)))
 Denoise:
 	echo "############### Denoise start at `date` ###############"
-	mkdir -p $(outdir)
+	mkdir -p $(dir $(firstword $(out_table_qza)))
 	source $(conda_activate) $(qiime2_env)
 	$(QIIME2) dada2 denoise-ccs --i-demultiplexed-seqs $(sample_qza) \
 	--o-table  $(out_freq_qza) \
