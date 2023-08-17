@@ -1,0 +1,33 @@
+1. sample_info.xls:样本描述文件
+（1）Sample：样本名称；
+（2）Group：样本分组信息；
+（3）Description：样本描述。
+
+2. sample_stat.xls：样本数据统计文件
+（1）Sample:样品名称；
+（2）Raw Reads：下机HiFi Reads数目；
+（3）Effective Reads：数据过滤后的HiFi Reads数目，即有效数据；
+（4）Effective Rate(%)：有效数据比例，即100*(Effective Reads/Raw Reads)；
+（5）Average len(bp)：Effective Reads的平均长度。
+
+3. len_plot/*.png：样本长度分布图
+横坐标为长度范围（bp），纵坐标为对应长度范围内的reads数量
+
+4. len_plot/*.xls：样本长度统计表
+第一行为长度分度区间（bp），第二行为该区间内的reads数量
+
+5. raw_stat.xls:原始下机数据统计文件
+（1）Sample：样本名称；
+（2）HiFi Reads：下机HiFi Reads数目；
+（3）HiFi Yield (bp)：HiFi Reads碱基总数；
+（4）HiFi Read Length (mean, bp): HiFi Reads平均长度；
+（5）HiFi Read Quality (median) ：HiFi Reads质量值中位数；
+（6）Max Length：最长的HiFi Reads长度；
+（7）N50：HiFi Reads的N50；
+（8）GC content: HiFi Reads的GC含量。
+
+6. 样本/*_hifi_accuracy_hist.png:HiFi Reads准确度分布图
+横坐标为质量值，纵坐标为reads数量，可以通过上图看到全部HiFi Reads整体的质量分布。
+
+7. 样本/*_hifi_readlength_hist.png:HiFi Reads长度分布图
+横轴为HiFi reads长度，纵轴为HiFi reads数量，可以通过上图看到全部HiFi Reads整体的长度分布。

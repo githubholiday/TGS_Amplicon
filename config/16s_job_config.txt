@@ -1,0 +1,335 @@
+[Job Start]
+Name	QC
+Queue	"all.q"
+Memory	10G
+CPU	1
+Major	T
+Order	1
+Depend	
+Command	make -f BIN/QC/mk_QC config=Para_config outdir=OUTDIR/Merge_bam/$(sample)[1] indir=Para_data_dir/$(sample)[0] sample=$(sample)[1] Merge
+make -f BIN/QC/mk_QC config=Para_config outdir=OUTDIR/QC/$(sample)[1] inbam=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.bam infa=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fasta.gz sample=$(sample)[1] PB_CCS_QC
+[Job End]
+
+
+[Job Start]
+Name	QC-Stat
+Queue	"all.q"
+Memory	2G
+CPU	1
+Major	T
+Order	1
+Depend	QC
+Command	make -f BIN/QC/mk_QC config=Para_config infile=OUTDIR/QC/*/*_hifireads_stat.xls outfile_name=All_hifireads_stat.xls outdir=OUTDIR/QC Stat_qc
+[Job End]
+
+[Job Start]
+Name	cutadapt
+Queue	"all.q"
+Memory	5G
+CPU	1
+Major	T
+Order	1
+Depend	
+Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json CutAdapt
+make -f BIN/filter/filter.mk software=Para_config cutadapt_json=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.stat sample=$(sample)[1] cutadapt_stat
+make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].fq.stat sample=$(sample)[1] fq_stat
+[Job End]
+
+[Job Start]
+Name	collect_cutadapt_stat
+Queue	"all.q"
+Memory	5G
+CPU	1
+Major	T
+Order	1
+Depend	
+Command	make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
+make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
+[Job End]
+
+[Job Start]
+Name	filter-stat
+Memory	20G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	2
+Depend	pb-tools-arrange
+Command	make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapte/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/Stat filter_stat
+make -f BIN/Stat/makefile config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/Stat/plot len_stat
+[Job End]
+
+[Job Start]
+Name	ASV
+Queue	"all.q"
+Memory	10G
+CPU	1
+Major	T
+Order	1
+Depend	
+Command	make -f BIN/ASV/asv.mk software=Para_config sample_list=Para_sample_list out_qza=OUTDIR/ASV/sample.qza software=Para_config ImportQiime
+make -f BIN/ASV/asv.mk software=Para_config sample_qza=OUTDIR/ASV/sample.qza out_table_qza=OUTDIR/ASV/sample.freq.qza out_rep_qza=OUTDIR/ASV/sample.rep.qza out_stat_qza=OUTDIR/ASV/sample.stat.qza denoise_min_len=Para_denoise_min_len denoise_max_len=Para_denoise_max_len front_p=Para_front_p tail_p=Para_tail_p Denoise 
+make -f BIN/ASV/asv.mk software=Para_config inqza=OUTDIR/ASV/sample.freq.qza outdir=OUTDIR/ASV/sample_freq qza_export
+make -f BIN/ASV/asv.mk software=Para_config inqza=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/ASV/sample_rep qza_export
+make -f BIN/ASV/asv.mk software=Para_config inqza=OUTDIR/ASV/sample.stat.qza outdir=OUTDIR/ASV/sample_stat qza_export
+[Job End]
+
+[Job Start]
+Name	Tax
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	4
+Depend	pb-16s-arrange
+Command	make -f BIN/Tax/tax.mk config=Para_config asv_seq=OUTDIR/ASV/sample_rep.qza search_db=Para_search_db search_tax=Para_search_db_tax tax_qza=OUTDIR/Tax/tax.qza cpu=5 tax_blast_qza=OUTDIR/Tax/tax.blast.qza tax_maxreject=100 tax_maxaccept=100  tax_identity=0.97  tax_vsearch
+make -f BIN/Tax/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample_freq.qza asv_rep=OUTDIR/ASV/sample_rep.qza outdir=OUTDIR/Tax/ tax_stat
+[Job End]
+
+[Job Start]
+Name	taxnomy_stat
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	3
+Depend	pb-tools-arrange
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
+[Job End]
+
+[Job Start]
+Name	taxnomy_sample_draw
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	3
+Depend	taxnomy_stat
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Heat top=35 Draw_heat
+[Job End]
+
+[Job Start]
+Name	taxnomy_group_draw
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	3
+Depend	taxnomy_sample_draw
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Heat top=35 Draw_heat
+[Job End]
+
+
+[Job Start]
+Name	Diversity-format
+Queue	"all.q"
+Memory	2G
+CPU	2
+Major   T
+Order	3
+Depend	taxnomy_sample_draw
+Command	make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*format.xls outdir=OUTDIR/Diversity/format prefix=allsample.merge merge
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.species type=species taxnomy_format
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.xls outdir=OUTDIR/Diversity/format prefix=merge.species.normalize qiime_biom
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.xls outdir=OUTDIR/Diversity/format prefix=merge.species qiime_biom
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.genus type=genus taxnomy_format
+[Job End]
+
+[Job Start]
+Name	Alpha
+Queue	"all.q"
+Memory	5G
+CPU	4
+Major	F
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan  merge_file=OUTDIR/Diversity/format/merge.species.xls sample_list=Para_sample_list Alpha_vegan
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan outfile=allsample.rarefaction.curve.pdf infile=OUTDIR/Diversity/format/merge.species.xls rarefaction
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan outfile=allsample.rank.curve.pdf infile=OUTDIR/Diversity/format/merge.species.xls rank
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan outfile=allsample.accumulation.curve.pdf infile=OUTDIR/Diversity/format/merge.species.xls accumulation
+[Job End]
+
+[Job Start]
+Name	Alpha-de
+Queue	"all.q"
+Memory	5G
+CPU	4
+Major	F
+Order	4
+Depend	Alpha
+Command	make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=ACE label=ACE Alpha_boxplot 
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Observed_species label=Observed_species Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Chao1 label=Chao1 Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Pielou label=Pielou Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Shannon label=Shannon Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Simpson label=Simpson Alpha_boxplot
+[Job End]
+
+#Diversity
+[Job Start]
+Name	Beta
+Queue	"all.q"
+Memory	5G
+CPU	2
+Major	T
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime  qza_file=OUTDIR/Diversity/format/merge.species.qza method=braycurtis Beta_qiime
+make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime qza_file=OUTDIR/Diversity/format/merge.species.qza method=jaccard Beta_qiime 
+[Job End]
+
+#Diversity
+[Job Start]
+Name	Beta-NMDS
+Queue	"all.q"
+Memory	5G
+Major	F
+CPU	2
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/NMDS/bray  merge_file=OUTDIR/Diversity/format/merge.species.xls cmp=Para_sample_list method=bray prefix=bray.NMDS NMDS
+make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/NMDS/jaccard merge_file=OUTDIR/Diversity/format/merge.species.xls cmp=Para_sample_list method=jaccard prefix=jaccard.NMDS NMDS
+[Job End]
+
+#Diversity
+[Job Start]
+Name	Beta-PCA
+Queue	"all.q"
+Memory	5G
+Major	F
+CPU	2
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/PCA infile=OUTDIR/Diversity/format/merge.species.xls cmp=Para_sample_list PCA
+[Job End]
+
+[Job Start]
+Name	Beta-PCoA
+Queue	"all.q"
+Memory	5G
+Major	F
+CPU	2
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Diversity/beta.mk config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list method=bray pdf_name=PCoA_ellipse_bray.pdf table_name=PCoA_bray.xls axis_table=PCoA_axis_bray.xls outdir=Para_outdir/Diversity/Beta_qiime/PCoA PCoA
+Command	make -f BIN/Diversity/beta.mk config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list method=jaccard pdf_name=PCoA_ellipse_jaccard.pdf table_name=PCoA_jaccard.xls axis_table=PCoA_axis_jaccard.xls outdir=Para_outdir/Diversity/Beta_qiime/PCoA PCoA
+[Job End]
+
+[Job Start]
+Name	picrust2
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	4
+Depend	pb-16s-arrange
+Command	make -f BIN/Picrust2/picrust.mk config=Para_config tax_tsv=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Picrust2 out_biom=OUTDIR/Picrust2/vserarch.biom prepare_picrust2
+make -f BIN/Picrust2/picrust.mk asv_fa=OUTDIR/ASV/asv_rep/dna-sequences.fasta vsearch_biom=OUTDIR/Picrust2/vserarch.biom trait=EC,KO outdir=OUTDIR/Picrust2/ cpu=5 picrust2
+[Job End]
+
+[Job Start]
+Name	cog-stat
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	4
+Depend	pb-tools-arrange
+Command	make -f BIN/Picrust2/cog.mk config=Para_config cog_in=OUTDIR/Picrust2/COG_metagenome_out/pred_metagenome_unstrat.tsv.gz outdir=OUTDIR/Picrust2/COG/ cog_anno
+[Job End]
+
+[Job Start]
+Name	cog-plot
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	cog-stat
+Command	make -fBIN/Picrust2/cog.mk config=Para_config infile=OUTDIR/Picrust2/COG/Sample/$(sample)[1].cog.stat.xls prefix=$(sample)[1].cog outdir=OUTDIR/Picrust2/COG/Plot/ cog_plot
+[Job End]
+
+[Job Start]
+Name	pathway-stat
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	pb-tools-arrange
+Command	make -f BIN/Picrust2/ko.mk config=Para_config ko_in=OUTDIR/Picrust2/KO_metagenome_out/pred_metagenome_unstrat.tsv.gz outdir=OUTDIR/Picrust2/Pathway/ pathway_stat
+[Job End]
+
+[Job Start]
+Name	pathway-plot
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	cog-stat
+Command	make -f BIN/Picrust2/ko.mk config=Para_config infile=OUTDIR/Picrust2/Pathway/Sample/$(sample)[1].classI.stat.xls outdir=OUTDIR/Picrust2/Pathway/Plot prefix=$(sample)[1].classI pathway_plot
+[Job End]
+
+
+[Job Start]
+Name	RDA_CCA
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Thread	1
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/RDA_CCA/mk_RDA_CCA config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list envir=Para_env_file prefix=RDA_CCA.coordinate outdir=Para_outdir/association_analysis/RDA_CCA RDA_CCA
+[Job End]
+
+[Job Start]
+Name	Network
+Memory	5G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Network/mk_Network config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls outfile1=Network.edge.xls outfile2=Network.pdf outdir=Para_outdir/Network Network
+[Job End]
+
+[Job Start]
+Name	anosim
+Memory	5G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/anosim/mk_anosim config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls  outdir=Para_outdir/anosim cmp=Para_sample_list anosim
+[Job End]
+
+[Job Start]
+Name	Diff
+Memory	5G
+CPU	2
+Queue	"all.q"
+Major	T
+Order	4
+Depend	Diversity-format
+Command	make -f BIN/Diff/Lefse/makefile config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls sample_list=Para_sample_list outdir=OUTDIR/Diff/Lefse/$(cmp)[0]_$(cmp)[1]  diff_on=$(cmp)[2] cmp1=$(cmp)[0] cmp2=$(cmp)[1] LDA=1 lefse_diff
+[Job End]
+
+[Job Start]
+Name	Report
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	5
+Command	make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini  upload_dir=OUTDIR/Report/upload outfile=OUTDIR/Report/report.config Get_report_conf
+make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini template=BIN/Report/16s.template upload_config=BIN/Report/upload.config indir=OUTDIR outdir=OUTDIR/Report Get_Upload
+make -f BIN/Report/makefile config=Para_config indir=OUTDIR outdir=OUTDIR/Report template=OUTDIR/Report/template.new report_conf=OUTDIR/Report/report.config Report
+make -f BIN/Report/makefile config=Para_config project_id=Para_project_id analysis_dir=OUTDIR pipeline_record
+[Job End]

@@ -1,0 +1,27 @@
+1. Species_count.xls :物种注释统计表
+（1）Sample：样本名称；
+（2）首行其他列：依次为界门纲目科属种；
+（3）数据：对应样本注释到不同物种分类层级上的种类数量。
+
+2. Sample文件夹：各个样本的统计情况
+1）Sample/Heatmap/heatmap_*_35_top.p*：样本物种丰度聚类热图,选择丰度前35的物种进行绘图（如果没有35个物种，则选择全部）。
+2）Sample/Heatmap/heatmap_*_35_top.xls：样本物种丰度聚类热图,选择丰度前35的物种进行绘图。
+3）Sample/Richness/richness_*_10_top.xls：样本丰度统计表，丰度前10的物种统计表。
+4）Sample/Richness/richness_*_10_top.p*：样本丰度堆积图，选择丰度前10的物种进行绘图。
+5）Sample/stat/*format.xls:各个样本的物种注释表。第一列为物种名，且按照界门纲目科属种的分类进行统计，第二列为注释上的ASV数量。
+
+
+3. Group文件夹：各个分组的统计情况,所有结果内容与Sample一致，只是将统计维护从样本换成分组
+
+4. Krona文件夹：每个样本的注释结果(Sample/stat/*format.xls)进行krona可视化，可以直接使用网页打开。
+
+5. taxnomy.stat.xls:每个样本的物种注释总表
+第一行：样本信息
+第一列：物种信息，对应着界门纲目科属种
+数字：代表每个样本在每个物种上注释上的read数量
+
+6. taxnomy.rate.xls:每个样本物种注释统计表
+（1）Sample：样本名称；
+（2）Effective Read：有效read数；
+（3）Taxonomy Read：注释上物种的read数；
+（4）Rate(%)：100*注释上物种的read数/有效read数。

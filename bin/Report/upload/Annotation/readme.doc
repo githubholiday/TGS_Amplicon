@@ -1,0 +1,41 @@
+1. COG：COG数据库的注释结果
+
+1.1 allsample.cog.stat.xls：所有样本在COG数据库功能分类上注释统计结果。
+（1）function code：编号；
+（2）function：COG数据库功能名称，可以通过第一列和第二列合并信息在COG数据库中进行查询；
+（3）3-其他列：为样本注释到不同分类上的ASV数量。
+
+1.2 Sample/*cog.stat.xls:每个样本在COG数据库功能分类上注释的统计结果，与allsample.cog.stat.xls文件中各样本值一致。
+（1）function code：编号；
+（2）function：COG数据库功能名称，可以通过第一列和第二列合并信息在COG数据库中进行查询；
+（3）3-其他列：为样本注释到不同分类上的ASV数量。
+
+1.3 Plot/样本.p*:各个样本在COG数据库功能分类上注释结果可视化图。
+横坐标为功能类型（对应功能名称见图右边标签），纵坐标为注释上该条目类别的数量。
+
+1.4 cog.anno.xls:COG功能预测原始表
+(1)function:COG ID;
+(2)数据：每个样本在各个功能条目上的相对风度值。
+
+2. Pathway:KEGG数据库的通路注释结果。
+2.1 allsample.pathway.I.stat.xls：所有样本在一级通路上的注释统计结果。
+1）ClassI：一级通路名称；
+2）其余列：为各个样本在一级通路上的注释数量。
+
+2.2 allsample.pathway.II.stat.xls：所有样本在二级通路上的注释统计结果。
+1）ClassII：二级通路名称。
+2）ClassI：二级通路对应的一级通路名称；
+3）其余列：为各个样本在二级通路上的注释数量。
+
+2.3 allsample.pathway.III.stat.xls：所有样本在三级通路上的注释统计结果。
+1）ClassIII：三级通路名称；
+2）ClassII：三级通路对应的二级通路名称；
+3）ClassI：二级通路对应的一级通路名称；
+4）其余列：为各个样本在三级通路上的注释数量。
+
+2.4 Plot/*.classI.png：各个样本在一级通路上的注释结果可视化图。
+横坐标为一级通路名称，纵坐标为注释上该通路类别的ASV数量。
+
+2.5 Sample/*.classI.stat.xls:各样本在一级通路上的注释统计结果
+2.6 Sample/*.classII.stat.xls:各样本在二级通路上的注释统计结果
+2.7 Sample/*.classIII.stat.xls:各样本在三级通路上的注释统计结果

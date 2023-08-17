@@ -1,0 +1,3 @@
+#Stat
+CSVTK=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_pbtools/bin/csvtk
+PYTHON3=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_pbtools/bin/python3

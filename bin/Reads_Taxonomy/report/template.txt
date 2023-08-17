@@ -1,0 +1,56 @@
+@@@@ASV
+MainMenu: ASV分析
+SubMenu: ASV统计
+P:#,;#为了研究样品的物种组成多样性，对所有样品的Effective Reads进行聚类，以97%的一致性（Identity）将序列聚类成为ASVs（Operational Taxonomic Units），每个ASV对应于一种代表序列。
+P:#,;#使用qimm2 dada2_denoist对Reads在97.0%的相似度水平下进行聚类、获得ASV。下表（若表格超过10行，报告中仅展示前10行）及下图显示了通过聚类得到各样品OTU的个数：图中柱子上面的数字即为相应样品的ASV数目。
+Table:upload/*ASV/ASV_stat.xls,4,,600,,0,ASV统计结果表
+PRE:,,67;
+（1）Sample：样本名称；
+（2）ASV Number：对应样本的ASV数量；
+（3）Read Number：对应样本所有ASV对应的reads数量。
+PRE
+Excel:upload/*ASV/ASV_stat.xls,,,ASV统计结果表下载：
+P:#,;#各样本的ASV数量分布图如下：
+Image:upload/*ASV/ASV_stat.xls,400,4,样本数据长度分布图，如下：
+P:#,;#横坐标为样本名称，纵坐标为ASV数量。
+Excel:upload/*ASV/ASV_stat.xls,,,样本数据长度分布图下载：
+
+MainMenu: 物种注释
+P:#,;#以Silva.138、GTDB、为参考数据库使用朴素贝叶斯分类器结合比对的方法对特征序列进行分类学注释,可得到每个特征对应的物种分类信息，进而在各水平（phylum，class，order，family，genus，species）统计各样品群落组成，利用QIIME软件生成不同分类水平上的物种丰度表，再利用R语言工具绘制成样品各分类学水平下的群落结构图。
+SubMenu: 物种分类统计
+P:#,;#各样本进行物种注释后，将各个样本在不同物种分类层级上注释到的类型数量进行统计，物种注释统计表，如下：
+Table:upload/*Taxnomy/Species_count.xls,4,,600,,0,物种注释统计表
+PRE:,,67;
+（1）Sample：样本名称；
+（2）首行其他列：依次为界门纲目科属种；
+（3）统计数据：对应样本注释到不同物种分类层级上的类型数量。
+PRE
+P:#,;#物种注释统计表下载：
+Excel:upload/*Taxnomy/Species_count.xls,,,物种注释统计表下载：
+
+SubMenu: 物种丰度统计
+ThirdMenu:基于样本统计
+P:#,;#基于不同物种分类层级（门、纲、目、科、属、种）的物种丰度，筛选并绘制各样本中不同分类层级下丰度排名前10位的物种丰度堆积条形图。以属的丰度统计图为示例展示，其他物种分类等级丰度统计图可从下方下载链接获取。
+Image:upload/*Taxnomy/Sample/Richness/richness_5_Genus_10_top.pdf,400,4,样本属的丰度堆积图，如下：
+P:#,;#横坐标为样本名称，纵坐标为个样本对应物种的绝对分度占比，不同颜色为不同物种，颜色图例见图右侧。
+P:#,;#样本物种丰度堆积图下载：
+Excel:upload/*Taxnomy/Sample/Richness/*pdf,,,样本物种丰度堆积图下载：
+P:#,;#样本物种丰度聚类热图见：upload/*Taxnomy/Sample/Heatmap/
+
+ThirdMenu:基于比较组统计
+P:#,;#基于不同物种分类层级（门、纲、目、科、属、种）的不同样本的物种丰度，将同一个分组中所有样本的物种信息进行汇总，筛选并绘制各组中不同分类层级下丰度排名前10位的物种丰度堆积条形图。以属的丰度统计图为示例展示，其他物种分类等级丰度统计图可从下方下载链接获取。
+Image:upload/*Taxnomy/Group/Richness/richness_5_Genus_10_top.pdf,400,4,组的属的丰度堆积图，如下：
+P:#,;#横坐标为样本名称，纵坐标为个样本对应物种的绝对分度占比，不同颜色为不同物种，颜色图例见图右侧。
+P:#,;#组丰度堆积图下载：
+Excel:upload/*Taxnomy/Group/Richness/*pdf,,,组物种丰度堆积图下载：
+P:#,;#样本物种丰度聚类热图见：upload/*Taxnomy/Group/Heatmap/
+
+
+
+SubMenu: Krona物种注释
+P:#,;#挑选出OTU/ASV分类学水平上 Top80丰度比例的特征序列，使用kraken2进行物种注释，并使用Krona进行可视化展示。Krona结果详解参考：https://github.com/marbl/Krona/wiki，示例和说明结果如下所示：
+Image:upload/public/krona_example.png,400,,Krnona网页结果打开示例图
+P:#,;#圆圈从内到外依次代表不同的分类级别（界门纲目科属种）；扇形的大小代表不同物种的相对比例。
+P:#,;#全部样品物种分类Krona可视化网页结果下载链接：
+Excel:upload/*Taxnomy/krona/*.html,,,全部样品物种分类Krnona可视化网页下载链接：
+

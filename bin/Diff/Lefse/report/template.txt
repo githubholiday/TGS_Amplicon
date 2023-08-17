@@ -1,0 +1,17 @@
+@@@@diff_analysis
+MainMenu: 差异分析
+SubMenu: LEfSe 组间差异判别分析
+P:#,;#LEfSe（Linear discriminant analysis Effect Size，线性判别分析及影响因子）是用于发现不同生物条件或环境下的两组或多组样本中最能解释组间差异的基因或功能特征，以及这些特征对组间差异的影响程度。 LEfSe 适用于多层次的生物学标识和特征的发现和解释，例如基因、代谢通路、物种分类学谱系等。运用统计学方法进行差异特征发现和显著性检验，软件首先使用非参数系数的 Kruskal-Wallis (KW) sum-rank test 检测组间丰度显著差异的特征，如果组间有相关联的子分组，则再进一步使用(unpaired) Wilcoxon rank-sum test 对上一步的差异特征在子分组中的差异一致性检查，最后运用 LDA 判别分析估计这些差异特征对组间区别的影响大小。
+SubMenu: 差异特征图
+Image:upload/*Diff/Lefse/lefse.lda.png,,,差异特征展示图
+P:#,;#通过统计两个组别当中有显著作用的微生物类群通过 LDA 分析（线性回归分析）后获得的 LDA 分值，图中展示了 LDA 分值大于设定值（默认设置为2）的物种，即组间具
+有统计学差异的Biomarker。
+P:#,;#差异特征展示图下载链接：
+Excel:upload/*Diff/Lefse/lefse.lda.p*,,,差异特征展示图下载链接：
+SubMenu: 差异聚类树
+Image:upload/*Diff/Lefse/all_level_lefse_significant_cladogram.png,,,显著差异物种聚类树
+P:#,;#通过对LDA分析中的显著差异物种进行聚类树的绘制，由内至外辐射的圆圈代表了由门至属（或种）的分类级别。在不同分类级别上的每一个小圆圈代表该水平下的一个分类
+，小圆圈直径大小与相对丰度大小呈正比。图中红色区域和绿色区域表示不同分组，树枝中红色节点表示在红色组别中起到重要作用的微生物类群，绿色节点表示在绿色组别中起
+到重要作用的微生物类群，黄色节点表示的是在两组中均没有起到重要作用的微生物类群。图中英文字母表示的物种名称在右侧图例中进行展示。
+P:#,;#显著差异物种聚类树下载链接：
+Excel:upload/*Diff/Lefse/all_level_lefse_significant_cladogram.p*,,,显著差异物种聚类树下载链接：

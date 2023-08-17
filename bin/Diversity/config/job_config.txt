@@ -1,0 +1,80 @@
+[Job Start]
+Name	Diversity-format
+Queue	"all.q"
+Memory	2
+CPU	2
+Major   T
+Order	4
+Depend	taxnomy_sample_draw
+Command	make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*format.xls outdir=OUTDIR/Diversity/format prefix=allsample.merge merge
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.species type=species taxnomy_format
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.normalize.xls outdir=OUTDIR/Diversity/format prefix=merge.species.normalize  qiime_biom
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.genus type=genus taxnomy_format
+[Job End]
+
+
+#Diversity
+[Job Start]
+Name	Alpha
+Env	idc_physical
+Memory	5
+CPU	4
+Image	conda_perl_r:v0.5
+Order	5
+Depend	Diversity-format
+Command	make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan  merge_file=OUTDIR/Diversity/format/merge.species.xls sample_list=Para_sample_list Alpha_vegan 
+[Job End]
+
+[Job Start]
+Name	Alpha-de
+Env	idc_physical
+Memory	5
+CPU	4
+Image	conda_perl_r:v0.5
+Order	5
+Depend	Alpha
+Command	make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=ACE label=ACE Alpha_boxplot 
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Observed_species label=Observed_species Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Chao1 label=Chao1 Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Pielou label=Pielou Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Shannon label=Shannon Alpha_boxplot
+make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Simpson label=Simpson Alpha_boxplot
+[Job End]
+
+#Diversity
+[Job Start]
+Name	Beta
+Env	idc_physical
+Memory	5
+CPU	2
+Image	conda_perl_r:v0.5
+Order	5
+Depend	Diversity-format
+Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime  qza_file=OUTDIR/Diversity/format/merge.species.normalize.qza method=braycurtis Beta_qiime
+make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime qza_file=OUTDIR/Diversity/format/merge.species.normalize.qza method=jaccard Beta_qiime 
+make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/NMDS  merge_file=OUTDIR/Diversity/format/merge.species.normalize.xls cmp=Para_cmp NMDS
+[Job End]
+
+#Diversity
+[Job Start]
+Name	Beta-PCA
+Env	idc_physical
+Memory	5
+CPU	2
+Image	smalltool_pei:v0.9
+Order	5
+Depend	Diversity-format
+Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/PCA infile=OUTDIR/Diversity/format/merge.species.normalize.xls cmp=Para_cmp PCA
+[Job End]
+
+[Job Start]
+Name	Beta-PCoA
+Env	idc_physical
+Memory	5
+CPU	2
+Image	smalltool_pei:v0.9
+Order	5
+Depend	Diversity-format
+Command	make -f BIN/beta.mk  infile=Para_outdir/Diversity/format/merge.species.normalize.xls cmp=Para_cmp method=bray outfile1=PCoA_ellipse_bray.pdf outfile2=PCoA_bray.xls outfile3=PCoA_axis_bray.xls outdir=Para_outdir/Diversity/Beta/PCoA PCoA
+Command	make -f BIN/beta.mk  infile=Para_outdir/Diversity/format/merge.species.normalize.xls cmp=Para_cmp method=jaccard outfile1=PCoA_ellipse_jaccard.pdf outfile2=PCoA_jaccard.xls outfile3=PCoA_axis_jaccard.xls outdir=Para_outdir/Diversity/Beta/PCoA PCoA
+[Job End]

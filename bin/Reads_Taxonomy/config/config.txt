@@ -1,0 +1,4 @@
+#Read Taxnomy
+PYTHON3=/annoroad/data1/software/bin/miniconda/envs/Transcriptome_pipeline_2023_v1/bin/python3.7
+Rscript=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/software/miniconda3/envs/TGS_16s_PCA/bin/Rscript
+CONVERT=/usr/local/bin/convert

@@ -1,0 +1,15 @@
+#picrusts-cog
+CSVTK=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/software/miniconda3/envs/TGS_16s_pbtools/bin/csvtk
+PYTHON3=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/software/miniconda3/envs/TGS_16s/bin/python3
+PERL=PERL=/usr/bin/perl
+Rscript=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/software/miniconda3/envs/TGS_16s_PCA/bin/Rscript
+CONVERT=/usr/local/bin/convert
+conda_activate=/annoroad/data1/software/bin/miniconda/bin/activate
+picrust_env=TGS_16s_pbtools
+
+#picrusts-cog-database
+cog=/annoroad/data1/bioinfo/PROJECT/Commercial/Cooperation/FTP/Database/COG/current/data/cog.txt
+cog_fun=/annoroad/data1/bioinfo/PROJECT/Commercial/Cooperation/FTP/Database/COG/current/data/fun_format.txt
+#picrusts-ko-database
+komap=/annoroad/data1/bioinfo/PROJECT/Commercial/Cooperation/FTP/Database/KEGG/current/data/ko2map/ko2map.xls
+map_pathway=/annoroad/data1/bioinfo/PROJECT/Commercial/Cooperation/FTP/Database/KEGG/current/data/map_pathway.list

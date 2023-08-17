@@ -1,0 +1,56 @@
+[Job Start]
+Name	picrust2
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	4
+Depend	pb-16s-arrange
+Command	make -f BIN/Picrust2/picrust.mk config=Para_config tax_tsv=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Picrust2 out_biom=OUTDIR/Picrust2/vserarch.biom prepare_picrust2
+make -f BIN/Picrust2/picrust.mk asv_fa=OUTDIR/ASV/asv_rep/dna-sequences.fasta vsearch_biom=OUTDIR/Picrust2/vserarch.biom trait=EC,KO outdir=OUTDIR/Picrust2/ cpu=5 picrust2
+[Job End]
+
+
+[Job Start]
+Name	cog-stat
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	F
+Order	4
+Depend	pb-16s-arrange
+Command	make -f BIN/Picrust2/cog.mk config=Para_config cog_in=OUTDIR/Picrust2/COG_metagenome_out/pred_metagenome_unstrat.tsv.gz outdir=OUTDIR/Picrust2/COG/ cog_anno
+[Job End]
+
+[Job Start]
+Name	cog-plot
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	cog-stat
+Command	make -fBIN/Picrust2/cog.mk config=Para_config infile=OUTDIR/Picrust2/COG/Sample/$(sample)[1].cog.stat.xls prefix=$(sample)[1].cog outdir=OUTDIR/Picrust2/COG/Plot/ cog_plot
+[Job End]
+
+[Job Start]
+Name	pathway-stat
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	pb-16s-arrange
+Command	make -f BIN/Picrust2/ko.mk config=Para_config ko_in=OUTDIR/Picrust2/KO_metagenome_out/pred_metagenome_unstrat.tsv.gz outdir=OUTDIR/Picrust2/Pathway/ pathway_stat
+[Job End]
+
+[Job Start]
+Name	pathway-plot
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	4
+Depend	cog-stat
+Command	make -f BIN/Picrust2/ko.mk config=Para_config infile=OUTDIR/Picrust2/Pathway/Sample/$(sample)[1].classI.stat.xls outdir=OUTDIR/Picrust2/Pathway/Plot prefix=$(sample)[1].classI pathway_plot
+[Job End]

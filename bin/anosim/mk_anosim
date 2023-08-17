@@ -1,0 +1,32 @@
+makefile_dir=$(dir $(firstword $(MAKEFILE_LIST)))
+makefile_name=$(notdir $(firstword $(MAKEFILE_LIST)))
+script=$(makefile_dir)/script/
+
+ifdef software
+	include $(software)
+else 
+	include $(makefile_dir)/software/software.txt
+endif
+
+
+HELP:
+	@echo Description: 用于anosim分析，判断分组合理性
+	@echo Program: mk_anosim
+	@echo Version: v1.0.0
+	@echo Contactor: yangzhang@genome.cn
+	@echo Usage:
+	@echo -e "\t" "make -f $(makefile_name) infile= outdir= cmp= software= anosim"
+	@echo 参数说明：
+	@echo -e "\t" "software: [文件|可选]  模块配置文件，和软件相关参数，默认为$(makefile_dir)/software/software.txt "
+	@echo -e "\t" "infile: [文件|必需]  输入文件，物种丰度文件，例如：merge.qiime.xls、otu.xls"
+	@echo -e "\t" "outdir: [路径|必需]  分析结果输出路径 "
+	@echo -e "\t" "cmp: [文件|必需]  cmp.list, 要求有两列，tab分隔，Sample和Group，大小写需要符合 "
+
+
+.PHONY:anosim
+anosim:
+	@echo "===================== Run correct Begin at `date` ===================== "
+	[ -d $(outdir) ] || mkdir -p $(outdir)/ && echo "dir ok"
+	$(Rscript) $(script)/anosim.r -i $(infile) -o $(outdir) -c $(cmp)
+	cd $(outdir) && for i in `ls *.pdf`; do $(CONVERT) $$i `basename $$i .pdf`.png ;done
+	@echo "===================== Run correct End at `date` ===================== "

@@ -1,0 +1,10 @@
+[Job Start]
+Name	Report
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	9
+Command	make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini template=BIN/Report/16s.template outdir=OUTDIR/Report Get_Upload
+make -f makefile config=Para_config indir=OUTDIR outdir=OUTDIR/Report template=OUTDIR/Report/template.new report_conf=OUTDIR/Report/report.config Report
+[Job End]

@@ -1,0 +1,9 @@
+CUTADAPT=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_qiime_2023/bin/cutadapt
+PYTHON3=/annoroad/data1/software/bin/miniconda/envs/python3_base/bin/python3
+CSVTK=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_pbtools/bin/csvtk
+SEQKIT=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_pbtools/bin/seqkit
+
+
+#18s
+##AACCTGGTTGATCCTGCCAGT
+#GATCCTTCTGCAGGTTCACCTAC

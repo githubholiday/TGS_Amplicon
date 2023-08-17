@@ -1,0 +1,70 @@
+makefile_dir=$(dir $(firstword $(MAKEFILE_LIST)))
+makefile_name=$(notdir $(firstword $(MAKEFILE_LIST)))
+script=$(makefile_dir)/script/
+
+ifdef config
+	include $(config)
+else
+	include $(makefile_dir)/config/config.txt
+endif
+
+
+HELP:
+	@echo Description: 三代下机数据合并统计，包括插入片段长度分布图，准确率分布图，数据量，数据产出比例
+	@echo Program: mk_QC
+	@echo Version: V1
+	@echo Contactor: mengli@genome.cn
+	@echo Usage:
+	@echo 	make -f mk_QC config= indir= outdir= sample= Merge PB_CCS_QC
+	@echo 参数说明：
+	@echo 	config1: 配置文件，包括软件及相关参数，默认为$(bin)/config/config，可选
+	@echo 	outdir: 输出目录，必须
+	@echo 	sample: 样本名，必须
+	@echo 	indir：输入目录，hifi_reads.bam文件所在的路径；如果多个bam文件夹,请放在indir目录下。indir格式要求：indir/*/*hifi_reads.bam，比须
+	@echo 	Merge: 三代下机数据按照样本名称合并
+	@echo 	PB_CCS_QC: 三代下机数据统计，包括插入片段长度分布图，准确率分布图，数据量，数据产出比例
+	@echo	Stat_qc: 整合多样本的数据统计文件
+
+.PHONY:Merge
+Merge:
+	@echo "################## MERGE Begin:`date`"
+	[ -s $(outdir) ] || mkdir -p $(outdir) && echo "dir ok"
+	if [ $(words $(sort $(wildcard $(indir)/*/*hifi_reads.bam))) -eq 1 ] ;\
+	then \
+		ln -sfn $(wildcard $(indir)/*/*.hifi_reads.bam) $(outdir)/$(sample).hifi.bam ;\
+		ln -sfn $(wildcard $(indir)/*/*.hifi_reads.bam.pbi) $(outdir)/$(sample).hifi.bam.pbi ;\
+	else \
+		${PBMERGE} -o $(outdir)/$(sample).hifi.bam $(indir)/*/*.hifi_reads.bam ;\
+	fi
+	cd $(outdir)/ && $(SMRT_BIN)/bam2fastq -o $(sample).hifi $(outdir)/$(sample).hifi.bam
+	cd $(outdir)/ && $(SMRT_BIN)/bam2fasta -o $(sample).hifi $(outdir)/$(sample).hifi.bam
+
+	@echo "################## MERGE End:`date`"
+
+
+.PHONY:PB_CCS_QC
+PB_CCS_QC:
+	@echo " "
+	@echo "################## QC Begin:`date`"
+	[ -s $(outdir) ] || mkdir -p $(outdir) && echo "dir ok"
+	$(SMRT_BIN)/dataset create --force --type ConsensusReadSet $(outdir)/$(sample).hifi.xml $(inbam)
+	cd $(outdir) && $(SMRT_BIN)/python -m pbreports.tasks.import_dataset_reports --log-level INFO -o $(outdir)/ $(outdir)/$(sample).hifi.xml
+	$(PYTHON3) $(script)/QC/extract_ccs_json.py -j $(outdir)/ccs.report.json -n $(sample) -o $(outdir)/$(sample)_hifireads_stat.xls
+	mv $(outdir)/ccs_accuracy_hist.png $(outdir)/$(sample)_hifi_accuracy_hist.png
+	mv $(outdir)/ccs_readlength_hist_plot.png $(outdir)/$(sample)_hifi_readlength_hist.png
+	mv $(outdir)/readlength_qv_hist2d.hexbin.png $(outdir)/$(sample)_readlength_qv_hist2d.hexbin.png
+	rm $(outdir)/ccs_*.png && rm $(outdir)/readlength_qv_hist2d.hexbin_thumb.png
+	$(PERL) $(script)/QC/fa_N50_stat.pl -fa $(infa) -o $(outdir)/$(sample).N50_N90.stat.xls
+	egrep "max_length|N50|GC" $(outdir)/$(sample).N50_N90.stat.xls|cut -f 1,2 >>$(outdir)/$(sample)_hifireads_stat.xls
+	sed -i "s/max_length: /Max Length\t/g" $(outdir)/$(sample)_hifireads_stat.xls
+	sed -i "s/GC content/GC Content/g" $(outdir)/$(sample)_hifireads_stat.xls
+	@echo "################## QC End:`date`"
+
+
+.PHONY:Stat_qc
+Stat_qc:
+	@echo "################## merge qc Begin:`date`"
+	[ -s $(outdir) ] || mkdir -p $(outdir) && echo "dir ok"
+	$(CSVTK) -t join $(infile)  > $(outdir)/$(outfile_name)
+	@echo "##################  merge qc end at :`date`"
+

@@ -1,0 +1,19 @@
+└── 01_QC
+    ├── A479_hifi_readlength_hist.png
+    └── All_hifireads_stat.xls
+
+### 文件解释说明
+#*hifireads_stat.xls：
+（1）Sample：样本名称；
+（2）HiFi Reads： HiFi Reads数目；
+（3）HiFi Yield (bp)： HiFi Reads碱基总数；
+（4）HiFi Read Length (mean, bp):  HiFi Reads平均长度；
+（5）HiFi Read Quality (median) ：HiFi Reads质量值中位数；
+（6）Max_length：最长的HiFi Reads长度；
+（7）N50：HiFi Reads的N50;
+（8）GC content: HiFi Reads的GC含量。
+
+
+#hifi_readlength_hist.p*：样本的HiFi Reads长度分布统计图
+横轴为HiFi reads长度，纵轴为HiFi reads数量。
+

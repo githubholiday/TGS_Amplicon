@@ -1,0 +1,4 @@
+#文件原路径	输出路径	是否存在	执行退出码
+/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/TGS_16s/QC/test/outdir/QC/All_hifireads_stat.xls	/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/TGS_16s/QC/report/upload/01_QC/	exist	0
+/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/TGS_16s/QC/test/outdir/QC/EIL48/EIL48_hifi_readlength_hist.png	/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/TGS_16s/QC/report/upload/01_QC/	exist	0
+/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/TGS_16s/QC/test/outdir/QC/EIL48/EIL48_hifi_accuracy_hist.png	/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/TGS_16s/QC/report/upload/01_QC/	exist	0

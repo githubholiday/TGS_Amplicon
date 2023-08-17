@@ -1,0 +1,5 @@
+SMRT_BIN=/annoroad/data1/software/bin/smrtlink/smrtlink_12.0.0.177059/smrtcmds/bin
+PBMERGE=/annoroad/data1/software/bin/smrtlink/smrtlink_12.0.0.177059/smrtcmds/bin/pbmerge
+python3=/annoroad/data1/software/bin/miniconda/bin/python3
+convert=/usr/local/bin/convert
+PERL=/usr/bin/perl

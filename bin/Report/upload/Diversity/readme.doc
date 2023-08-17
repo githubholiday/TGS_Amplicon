@@ -1,0 +1,89 @@
+该目录下的结果为多样性分析结果，分别为alpha多样性和Beta多样性结果。
+Alpha文件夹：Alpha多样性分析结果
+1. alpha_index_stat.xls：alpha多样性指标统计表
+（1）Sample：样本名称；
+（2）Chao1：Chao1指数是物种数目的衡量标准之一，它考虑3个因素，一是物种数目，二是只有1条序列的物种数目，三是2条序列的物种数目，Chao1指数越大，表明某群落物种数目较多，并且Chao1指数受1条和2条序列的物种影响较大；
+（3）ACE：基于丰度的覆盖估计值（Abundance-based Coverage Estimator, ACE），用于估计群落中含有物种数目的指数，ACE指数越大，表明群落中物种数目越大；
+（4）Observed_features：每个样本中能够观察到物种数量，与物种的多少无关；
+（5）Pielou：Pielou的均匀度指数（Pielou’s Evenness Index），是最常用的均匀度指数，受到香农指数与observed_features的影响；
+（6）Shannon：香农指数，香农指数值越高，表明群落的α多样性越高，并且该指数计算时受丰度低的物种影响较大；
+（7）Simpson：辛普森指数（Simpson index），Simpson 指数值越大，说明群落多样性越低。辛普森指数在计算时将丰度高的物种设置了较大权重，所以高丰度物种较多时该指数值较大。
+
+2. ACE.p*，Chao1.p*，Observed_species.p*，Pielou.p*，Shannon.p*，Simpson.p*：将alpha多样性指标按照比较组计算差异，如果比较组过多，则只绘制前5个比较组的情况。
+
+3. allsample.rarefaction.curve.p*：所有样本的稀释性曲线图。
+
+Beta文件夹：Beta多样性分析结果
+1. beta_qiime_braycurtis.xls：按照braycurtis方法计算的距离矩阵。
+第一行和第一列为样本名称，数据为两两样本间的距离值。样本内的距离默认为0。
+
+2. beta_qiime_braycurtis.heatmap.p*：根据braycurtis方法计算的距离矩阵绘制的热图。
+图中热图颜色越接近蓝色表示两个样本的微生物群落差异越小，越接近红色表示两个样本微生物群落之间的差异越大。
+
+3. beta_qiime_jaccard.xls：按照jaccard方法计算的距离矩阵。
+第一行和第一列为样本名称，数据为两两样本间的距离值。样本内的距离默认为0。
+
+4. beta_qiime_jaccard.heatmap.p*：根据jaccard方法计算的距离矩阵绘制的热图。
+图中热图颜色越接近蓝色表示两个样本的微生物群落差异越小，越接近红色表示两个样本微生物群落之间的差异越大。
+
+5. NMDS文件夹：NMSD分析结果
+1)bray/NMDS.p*按照braycurtis方法计算后绘制的NMSD图。
+2)jaccard/NMDS.p*按照jaccard方法计算后绘制的NMSD图。
+图中的每个点表示一个样品，不同颜色代表不同分组。
+点与点之间的距离表示差异程度，检验NMDS结果的优劣用胁迫系数（stress）来衡量，此值越小越好，当小于0.2是可以用NMDS的二维点图表示，当stress<0.05时具有很好的代表性。
+
+
+6. PCA文件夹：PCA分析结果
+1)PCA.3d.png：PCA分析3维图。
+图中每个点代表一个样品；不同颜色代表不同分组；
+每个坐标轴分别表示第一、二、三主成分，括号中的数字表示主成分的贡献度。
+
+2)PCA.png：PCA分析2维图。
+图中每个点代表一个样品；不同颜色代表不同分组；
+横坐标为第一主成分，纵坐标为第二主成分，括号中的数字表示主成分的贡献度。
+
+3)PCA_summary.xls：每个主成分的贡献度统计表
+
+4)PCA_variable_dim1_dim2.png
+第一二主成分中不同样本的影响因子。颜色越深表示影响越大，大于0表示正影响，小于0表示负影响。
+
+
+7. PCoA文件夹：PCoA分析结果
+1）PCoA_axis_bray.xls:按照braycurtis方法计算的结果
+- axis：axis number.
+- Eigenvalues：All eigenvalues (positive, null, negative).所有特征值
+- Relative_eig：Relative eigenvalues.相对特征值(每个轴的解释量)
+- Broken_stick：Expected fractions of variance under the broken stick model.断棒模型下的预期方差分数
+- Cumul_eig：Cumulative relative eigenvalues.累积相对特征值
+- Cumul_br_stick：Cumulative broken stick fractions.累计断棒分数
+
+2)PCoA_axis_jaccard.xls：按照jaccard方法计算的结果
+- axis：axis number.
+- Eigenvalues：All eigenvalues (positive, null, negative).所有特征值
+- Relative_eig：Relative eigenvalues.相对特征值(每个轴的解释量)
+- Broken_stick：Expected fractions of variance under the broken stick model.断棒模型下的预期方差分数
+- Cumul_eig：Cumulative relative eigenvalues.累积相对特征值
+- Cumul_br_stick：Cumulative broken stick fractions.累计断棒分数
+
+3)PCoA_bray.xls:按照braycurtis方法计算的结果
+- Sample：样本
+- bac_PCo1：第一主成分坐标
+- bac_PCo2：第二主成分坐标
+
+4)PCoA_jaccard.xls:按照jaccard方法计算的结果
+- Sample：样本
+- bac_PCo1：第一主成分坐标
+- bac_PCo2：第二主成分坐标
+
+5)PCoA_ellipse_bray.p*:按照braycurtis方法计算的结果
+图中每个点代表一个样品；不同颜色代表不同分组；椭圆形圈表示其为95%置信椭圆(即该样本组假如有100个样本会有95个落在其中)。横坐标表示第一主成分，百分比则表示第一
+主成分对样品差异的贡献值；纵坐标表示第二主成分，百分比表示第二主成分对样品差异的贡献值。
+
+6)PCoA_ellipse_jaccard.p*:按照jaccard方法计算的结果
+图中每个点代表一个样品；不同颜色代表不同分组；椭圆形圈表示其为95%置信椭圆(即该样本组假如有100个样本会有95个落在其中)。横坐标表示第一主成分，百分比则表示第一
+主成分对样品差异的贡献值；纵坐标表示第二主成分，百分比表示第二主成分对样品差异的贡献值。
+
+
+
+
+

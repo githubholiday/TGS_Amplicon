@@ -1,0 +1,1 @@
+make -f ../makefile infile=../../file_format/test/output/*format.xls outdir=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/tuchengfang/Pipeline/Stable_Pipeline/TGS_16s/bin/Reads_Taxonomy/test/output top=10 config=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/tuchengfang/Pipeline/Stable_Pipeline/TGS_16s/config/config.txt  Draw_rich

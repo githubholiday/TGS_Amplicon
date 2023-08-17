@@ -1,0 +1,3 @@
+QIIME2=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_qiime_2023/bin/qiime
+qiime2_env=TGS_16s_qiime_2023
+conda_activate=/annoroad/data1/software/bin/miniconda/bin/activate

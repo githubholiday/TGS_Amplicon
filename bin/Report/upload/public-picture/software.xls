@@ -1,0 +1,6 @@
+NO	software	version	function	para	offical_website
+1	SMARTlink	2023		转化ccs	默认参数	https://www.pacb.com/support/software-downloads/
+2	qiime2	2023-2	去接头；ASV分析；物种注释；	默认参数	https://qiime2.org/
+3	krona	2.8.1	物种可视化	默认参数	https://github.com/marbl/Krona
+4	LEfSe	--  组间差异分析    默认参数    --
+5	anoism	--	组间差异检验	--	--

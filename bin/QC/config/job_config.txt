@@ -1,0 +1,23 @@
+[Job Start]
+Name	QC
+Queue	"all.q"
+Memory	10
+CPU	1
+Major	T
+Order	1
+Depend	
+Command	make -f BIN/QC/mk_QC outdir=OUTDIR/Merge_bam/$(Sample)[1] indir=Para_data_dir/$(Sample)[0] sample=$(Sample)[1] Merge
+make -f BIN/QC/mk_QC outdir=OUTDIR/QC/$(Sample)[1] inbam=OUTDIR/Merge_bam/$(Sample)[1]/$(Sample)[1].hifi.bam infa=OUTDIR/Merge_bam/$(Sample)[1]/$(Sample)[1].hifi.fasta.gz sample=$(Sample)[1] Merge PB_CCS_QC
+[Job End]
+
+
+[Job Start]
+Name	QC-Stat
+Queue	"all.q"
+Memory	2
+CPU	1
+Major	T
+Order	1
+Depend	QC
+Command	make -f BIN/QC/mk_QC infile=OUTDIR/QC/*/*_hifireads_stat.xls outfile_name=All_hifireads_stat.xls outdir=OUTDIR/QC Stat_qc
+[Job End]

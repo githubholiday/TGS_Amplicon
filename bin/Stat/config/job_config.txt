@@ -1,0 +1,10 @@
+[Job Start]
+Name	filter-stat
+Memory	1G
+Queue	"all.q"
+CPU	N
+Major	T
+Order	1
+Command	make -f BIN/Stat/makefile read_stat=OUTDIR/PB_16s_result/PB_16s_arrange/cutadapter.read_stat.tsv sample_stat=OUTDIR/PB_16s_result/PB_16s_arrange/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/Stat config=Para_config filter_stat
+make -f BIN/Stat/makefile read_stat=OUTDIR/PB_16s_result/PB_16s_arrange/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/Stat/plot config=Para_config len_stat
+[Job End]
