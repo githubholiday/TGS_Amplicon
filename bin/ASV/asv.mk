@@ -56,12 +56,12 @@ front_p=AGRGTTYGATYMTGGCTCAG
 tail_p=RGYTACCTTGTTACGACTT
 Denoise:
 	echo "############### Denoise start at `date` ###############"
-	mkdir -p $(dir $(firstword $(out_table_qza)))
-	source $(conda_activate) $(qiime2_env)
+	mkdir -p $(dir $(firstword $(out_freq_qza)))
+	source $(conda_activate) $(qiime2_env) &&\
 	$(QIIME2) dada2 denoise-ccs --i-demultiplexed-seqs $(sample_qza) \
 	--o-table  $(out_freq_qza) \
 	--o-representative-sequences $(out_rep_qza) \
-	--o-denoising-stats $(out_stat_qza)\
+	--o-denoising-stats $(out_stat_qza) \
 	--p-min-len $(denoise_min_len) --p-max-len $(denoise_max_len) \
 	--p-max-ee $(denoise_max_ee) \
 	--p-front $(front_p) \
