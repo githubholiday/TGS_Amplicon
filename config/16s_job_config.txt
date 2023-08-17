@@ -30,7 +30,7 @@ CPU	1
 Major	T
 Order	1
 Depend	
-Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json CutAdapt
+Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json front_p=Para_front_p_cutadap tail_p=Para_tail_p_cutadap CutAdapt
 make -f BIN/filter/filter.mk software=Para_config cutadapt_json=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.stat sample=$(sample)[1] cutadapt_stat
 make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].fq.stat sample=$(sample)[1] fq_stat
 [Job End]
@@ -68,7 +68,7 @@ Major	T
 Order	1
 Depend	
 Command	make -f BIN/ASV/asv.mk software=Para_config sample_list=Para_sample_list out_qza=OUTDIR/ASV/sample.qza software=Para_config ImportQiime
-make -f BIN/ASV/asv.mk software=Para_config sample_qza=OUTDIR/ASV/sample.qza out_table_qza=OUTDIR/ASV/sample.freq.qza out_rep_qza=OUTDIR/ASV/sample.rep.qza out_stat_qza=OUTDIR/ASV/sample.stat.qza denoise_min_len=Para_denoise_min_len denoise_max_len=Para_denoise_max_len front_p=Para_front_p tail_p=Para_tail_p Denoise 
+make -f BIN/ASV/asv.mk software=Para_config sample_qza=OUTDIR/ASV/sample.qza out_table_qza=OUTDIR/ASV/sample.freq.qza out_rep_qza=OUTDIR/ASV/sample.rep.qza out_stat_qza=OUTDIR/ASV/sample.stat.qza denoise_min_len=Para_denoise_min_len denoise_max_len=Para_denoise_max_len front_p=Para_front_p_dada2 tail_p=Para_tail_p_dada2 Denoise 
 make -f BIN/ASV/asv.mk software=Para_config inqza=OUTDIR/ASV/sample.freq.qza outdir=OUTDIR/ASV/sample_freq qza_export
 make -f BIN/ASV/asv.mk software=Para_config inqza=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/ASV/sample_rep qza_export
 make -f BIN/ASV/asv.mk software=Para_config inqza=OUTDIR/ASV/sample.stat.qza outdir=OUTDIR/ASV/sample_stat qza_export
