@@ -46,7 +46,7 @@ collect_stat:
 	$(CSVTK) concat -t -C "%" $(infile) > $(outfile)
 	echo "############### collect_stat end at `date` ###############"
 
-
+cpu=1
 fq_stat:
 	echo "############### fq_stat start at `date` ###############"
 	$(SEQKIT) fx2tab -j $(cpu) -q --gc -l -H -n -i $(infq) |$(CSVTK) mutate2 -C '%' -t -n sample -e '"${sample}"' > ${outfile}
