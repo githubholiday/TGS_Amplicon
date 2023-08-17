@@ -37,9 +37,9 @@ HELP:
 	@echo -e "\t" "cpu: [字符串|可选]线程数，默认为10"
 	@echo -e "\t" "denoise_pooling_method: [字符串|可选]池化方法，默认为pseudo"
 	@echo -e "\t" "输出："
-	@echo -e "\t" "out_freq_qza: [字符串|必需]ASV频率输出文件，qza格式"
-	@echo -e "\t" "out_rep_qza: [字符串|必需]ASV序列输出文件，qza格式,导出是fasta格式"
-	@echo -e "\t" "out_stat_qza: [字符串|必需]ASV统计输出文件，qza格式"
+	@echo -e "\t" "out_freq_qza: [字符串|必需]ASV频率输出文件，qza格式,使用qiime2导出的为biom格式:feature-table.biom"
+	@echo -e "\t" "out_rep_qza: [字符串|必需]ASV序列输出文件，qza格式,导出是fasta格式:dna-sequences.fasta"
+	@echo -e "\t" "out_stat_qza: [字符串|必需]ASV统计输出文件，qza格式,使用qiime2导出的为tsv格式:stats.tsv"
 	
 ImportQiime:
 	echo "############### ImportQiime start at `date` ###############"
