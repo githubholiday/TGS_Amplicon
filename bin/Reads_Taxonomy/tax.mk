@@ -61,6 +61,7 @@ tax_vsearch:
 
 tax_stat:
 	echo "############### tax_stat start at `date` ###############"
+	mkdir -p $(outdir)
 	$(QIIME2) tools export --input-path $(tax_qza) --output-path $(outdir)/tax_export
 	$(QIIME2) feature-table transpose --i-table $(asv_freq) ----o-transposed-feature-table $(outdir)/transposed_asv.qza
 	$(QIIME2) metadata tabulate --m-input-file $(asv_rep) --m-input-file $(tax_qza) --m-input-file $(outdir)/transposed_asv.qza --o-visualization $(outdir)/merge.qzv

@@ -26,8 +26,8 @@ table2json=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/liutao/202/bi
 18s_search_db_tax=/annoroad/data1/bioinfo/PROJECT/Commercial/Cooperation/FTP/Database/Micro/silva/current/data/silva-138-99-tax.qza
 
 #ITs
-ITs_denoise_min_len=300
-ITs_denoise_max_len=1200
+ITs_denoise_min_len=500
+ITs_denoise_max_len=2000
 ITs_front_p_dada2=CTTGGTCATTTAGAGGAAGTAA
 ITs_tail_p_dada2=TCCTCCGCTTATTGATATGC
 ITs_front_p_cutadap=CTTGGTCATTTAGAGGAAGTAA

@@ -31,7 +31,7 @@ cutadapt_cpu=3
 .PHONY:CutAdapt
 CutAdapt:
 	echo "############### CutAdapt start at `date` ###############"
-	mkdir -p$(dir $(firstword $(outfq)))
+	mkdir -p $(dir $(firstword $(outfq)))
 	$(CUTADAPT) -g "$(front_p)...$(tail_p)" $(infq) -o $(outfq) -j $(cutadapt_cpu) --trimmed-only --revcomp -e 0.1 --json $(outjson)
 	echo "############### CutAdapt end at `date` ###############"
 
