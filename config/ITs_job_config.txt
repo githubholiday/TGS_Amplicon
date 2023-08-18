@@ -92,7 +92,7 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	T
-Order	3
+Order	4
 Depend	Tax
 Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
 [Job End]
@@ -103,7 +103,7 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	F
-Order	3
+Order	4
 Depend	taxnomy_stat
 Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
 make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
@@ -116,7 +116,7 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	F
-Order	3
+Order	4
 Depend	taxnomy_sample_draw
 Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
 make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
@@ -130,7 +130,7 @@ Queue	"all.q"
 Memory	2G
 CPU	2
 Major   T
-Order	3
+Order	5
 Depend	taxnomy_sample_draw
 Command	make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*format.xls outdir=OUTDIR/Diversity/format prefix=allsample.merge merge
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.species type=species taxnomy_format
@@ -145,7 +145,7 @@ Queue	"all.q"
 Memory	5G
 CPU	4
 Major	F
-Order	4
+Order	5
 Depend	Diversity-format
 Command	make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan  merge_file=OUTDIR/Diversity/format/merge.species.xls sample_list=Para_sample_list Alpha_vegan
 make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan outfile=allsample.rarefaction.curve.pdf infile=OUTDIR/Diversity/format/merge.species.xls rarefaction
@@ -159,7 +159,7 @@ Queue	"all.q"
 Memory	5G
 CPU	4
 Major	F
-Order	4
+Order	5
 Depend	Alpha
 Command	make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=ACE label=ACE Alpha_boxplot 
 make -f BIN/Diversity/alpha.mk config=Para_config outdir=OUTDIR/Diversity/Alpha_vegan/de  infile=OUTDIR/Diversity/Alpha_vegan/alpha_vegan_boxplot.xls prefix=Observed_species label=Observed_species Alpha_boxplot
@@ -176,7 +176,7 @@ Queue	"all.q"
 Memory	5G
 CPU	2
 Major	T
-Order	4
+Order	5
 Depend	Diversity-format
 Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime  qza_file=OUTDIR/Diversity/format/merge.species.qza method=braycurtis Beta_qiime
 make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime qza_file=OUTDIR/Diversity/format/merge.species.qza method=jaccard Beta_qiime 
@@ -189,7 +189,7 @@ Queue	"all.q"
 Memory	5G
 Major	F
 CPU	2
-Order	4
+Order	5
 Depend	Diversity-format
 Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/NMDS/bray  merge_file=OUTDIR/Diversity/format/merge.species.xls cmp=Para_sample_list method=bray prefix=bray.NMDS NMDS
 make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/NMDS/jaccard merge_file=OUTDIR/Diversity/format/merge.species.xls cmp=Para_sample_list method=jaccard prefix=jaccard.NMDS NMDS
@@ -202,7 +202,7 @@ Queue	"all.q"
 Memory	5G
 Major	F
 CPU	2
-Order	4
+Order	5
 Depend	Diversity-format
 Command	make -f BIN/Diversity/beta.mk config=Para_config outdir=OUTDIR/Diversity/Beta_qiime/PCA infile=OUTDIR/Diversity/format/merge.species.xls cmp=Para_sample_list PCA
 [Job End]
@@ -213,7 +213,7 @@ Queue	"all.q"
 Memory	5G
 Major	F
 CPU	2
-Order	4
+Order	5
 Depend	Diversity-format
 Command	make -f BIN/Diversity/beta.mk config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list method=bray pdf_name=PCoA_ellipse_bray.pdf table_name=PCoA_bray.xls axis_table=PCoA_axis_bray.xls outdir=Para_outdir/Diversity/Beta_qiime/PCoA PCoA
 Command	make -f BIN/Diversity/beta.mk config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list method=jaccard pdf_name=PCoA_ellipse_jaccard.pdf table_name=PCoA_jaccard.xls axis_table=PCoA_axis_jaccard.xls outdir=Para_outdir/Diversity/Beta_qiime/PCoA PCoA
@@ -227,7 +227,7 @@ Queue	"all.q"
 CPU	N
 Major	T
 Thread	1
-Order	4
+Order	6
 Depend	Diversity-format
 Command	make -f BIN/FUNGuild/makefile config=Para_config indir=Para_outdir/Taxnomy/stat FunGuild
 [Job End]
@@ -239,7 +239,7 @@ Queue	"all.q"
 CPU	N
 Major	T
 Thread	1
-Order	4
+Order	6
 Depend	Diversity-format
 Command	make -f BIN/RDA_CCA/mk_RDA_CCA config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list envir=Para_env_file prefix=RDA_CCA.coordinate outdir=Para_outdir/association_analysis/RDA_CCA RDA_CCA
 [Job End]
@@ -250,7 +250,7 @@ Memory	5G
 Queue	"all.q"
 CPU	N
 Major	T
-Order	4
+Order	6
 Depend	Diversity-format
 Command	make -f BIN/Network/mk_Network config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls outfile1=Network.edge.xls outfile2=Network.pdf outdir=Para_outdir/Network Network
 [Job End]
@@ -261,7 +261,7 @@ Memory	5G
 Queue	"all.q"
 CPU	N
 Major	T
-Order	4
+Order	6
 Depend	Diversity-format
 Command	make -f BIN/anosim/mk_anosim config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls  outdir=Para_outdir/anosim cmp=Para_sample_list anosim
 [Job End]
@@ -272,7 +272,7 @@ Memory	5G
 CPU	2
 Queue	"all.q"
 Major	T
-Order	4
+Order	6
 Depend	Diversity-format
 Command	make -f BIN/Diff/Lefse/makefile config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls sample_list=Para_sample_list outdir=OUTDIR/Diff/Lefse/$(cmp)[0]_$(cmp)[1]  diff_on=$(cmp)[2] cmp1=$(cmp)[0] cmp2=$(cmp)[1] LDA=1 lefse_diff
 [Job End]
@@ -283,7 +283,7 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	T
-Order	5
+Order	7
 Command	make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini  upload_dir=OUTDIR/Report/upload outfile=OUTDIR/Report/report.config Get_report_conf
 make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini template=BIN/Report/16s.template upload_config=BIN/Report/upload.config indir=OUTDIR outdir=OUTDIR/Report Get_Upload
 make -f BIN/Report/makefile config=Para_config indir=OUTDIR outdir=OUTDIR/Report template=OUTDIR/Report/template.new report_conf=OUTDIR/Report/report.config Report
