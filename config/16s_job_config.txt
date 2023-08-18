@@ -55,7 +55,7 @@ CPU	N
 Major	T
 Order	2
 Depend	collect_cutadapt_stat
-Command	make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapte/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/Stat filter_stat
+Command	make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/Stat filter_stat
 make -f BIN/Stat/makefile config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/Stat/plot len_stat
 [Job End]
 
