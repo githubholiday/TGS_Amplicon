@@ -3,3 +3,5 @@ PYTHON3=/annoroad/data1/software/bin/miniconda/envs/Transcriptome_pipeline_2023_
 Rscript=/annoroad/data1/bioinfo/PROJECT/RD/Cooperation/RD_Group/leiguo/software/miniconda3/envs/TGS_16s_PCA/bin/Rscript
 CONVERT=/usr/local/bin/convert
 QIIME2=/annoroad/data1/software/bin/miniconda/envs/TGS_16s_qiime_2023/bin/qiime
+conda_activate=/annoroad/data1/software/bin/miniconda/bin/activate
+qiime2_env=TGS_16s_qiime_2023

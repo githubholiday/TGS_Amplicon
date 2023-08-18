@@ -46,16 +46,16 @@ tax_identity=0.97
 tax_vsearch:
 	echo "############### tax_vsearch start at `date` ###############"
 	mkdir -p $(dir $(firstword $(tax_qza)))
-	$(QIIME2) feature-classifier classify-consensus-vsearch --i-query $(asv_seq) \
-  	--o-classification $(tax_qza) \
+	source $(conda_activate) $(qiime2_env) && $(QIIME2) feature-classifier classify-consensus-vsearch --i-query $(asv_seq) \
+	--o-classification $(tax_qza) \
 	--o-search-results $(tax_blast_qza) \
-  	--i-reference-reads $(search_db) \
-  	--i-reference-taxonomy $(search_tax) \
-  	--p-threads $(cpu) \
-  	--p-maxrejects $(tax_maxreject) \
-  	--p-maxaccepts $(tax_maxaccept) \
-  	--p-perc-identity $(tax_identity) \
-  	--p-top-hits-only
+	--i-reference-reads $(search_db) \
+	--i-reference-taxonomy $(search_tax) \
+	--p-threads $(cpu) \
+	--p-maxrejects $(tax_maxreject) \
+	--p-maxaccepts $(tax_maxaccept) \
+	--p-perc-identity $(tax_identity) \
+	--p-top-hits-only
 	echo "############### tax_vsearch end at `date` ###############"
 
 
