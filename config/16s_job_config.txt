@@ -83,7 +83,7 @@ Major	T
 Order	4
 Depend	ASV
 Command	make -f BIN/Reads_Taxonomy/tax.mk config=Para_config asv_seq=OUTDIR/ASV/sample.rep.qza search_db=Para_search_db search_tax=Para_search_db_tax tax_qza=OUTDIR/Tax/tax.qza cpu=5 tax_blast_qza=OUTDIR/Tax/tax.blast.qza tax_maxreject=100 tax_maxaccept=100  tax_identity=0.97  tax_vsearch
-make -f BIN/Reads_Taxonomy/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample_freq.qza asv_rep=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/Tax/ tax_stat
+make -f BIN/Reads_Taxonomy/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample.freq.qza asv_rep=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/Tax/ tax_stat
 [Job End]
 
 [Job Start]
