@@ -6,6 +6,11 @@ args <- commandArgs(TRUE)
 
 library(pheatmap)
 data <- read.csv(args[1],sep='\t',header=T,row.names=1)
+if (ncol(data)<2){
+        print("Error: The number of columns in the input file is less than 2")
+        q()
+}
+
 data[data==0]=0.0001
 log_data <- log10(data)
 pdf(args[2],w=12,h=12)
