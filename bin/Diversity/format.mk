@@ -60,6 +60,6 @@ taxnomy_format:
 
 qiime_biom:
 	@echo "===================== Run qiime_biom Begin at `date` ===================== "
-	${QIIME2}/biom convert -i ${infile} -o ${outdir}/$(prefix).biom  --to-hdf5 --table-type="OTU table"
-	${QIIME2}/qiime tools import --input-path ${outdir}/$(prefix).biom --type 'FeatureTable[Frequency]' --input-format BIOMV210Format --output-path ${outdir}/$(prefix).qza
+	${QIIME_DIR}/biom convert -i ${infile} -o ${outdir}/$(prefix).biom  --to-hdf5 --table-type="OTU table"
+	${QIIME_DIR}/qiime tools import --input-path ${outdir}/$(prefix).biom --type 'FeatureTable[Frequency]' --input-format BIOMV210Format --output-path ${outdir}/$(prefix).qza
 	@echo "===================== Run qiime_biom End at `date` ===================== "
