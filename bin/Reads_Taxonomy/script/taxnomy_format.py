@@ -129,8 +129,9 @@ def main():
 					tax_info = taxnomy_dic[tax]
 					species = tax.split("|"+required_type)[1]
 					sample_tax_num = tax_info[sample_index]
-					print(sample_tax_num)
-					print(species_read_count)
+					if sample_tax_num == 0 : continue
+					#print(sample_tax_num)
+					#print(species_read_count)
 					rate = '{0:.3f}'.format(sample_tax_num/species_read_count)
 					out = [species, str(sample_tax_num),rate]
 					ratefile.write('\t'.join(out)+'\n')
