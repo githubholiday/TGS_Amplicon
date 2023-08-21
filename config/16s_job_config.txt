@@ -43,20 +43,10 @@ CPU	1
 Major	T
 Order	2
 Depend	cutadapt	
-Command	make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
-make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
-[Job End]
-
-[Job Start]
-Name	filter-stat
-Memory	2G
-Queue	"all.q"
-CPU	N
-Major	T
-Order	2
-Depend	collect_cutadapt_stat
-Command	make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/Stat filter_stat
-make -f BIN/Stat/makefile config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/Stat/plot len_stat
+Command	make -f BIN/cutadapt/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
+make -f BIN/cutadapt/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
+make -f BIN/cutadapt/stat.mk config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/cutadapt filter_stat
+make -f BIN/cutadapt/stat.mk config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/cutadapt/plot len_stat
 [Job End]
 
 [Job Start]
@@ -94,7 +84,7 @@ CPU	N
 Major	T
 Order	4
 Depend	Tax
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Tax/stat OTU_Stat
 [Job End]
 
 [Job Start]
@@ -105,9 +95,9 @@ CPU	N
 Major	F
 Order	4
 Depend	taxnomy_stat
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Tax/Sample_format Sample_Format
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Sample_format/*.format.xls outdir=OUTDIR/Tax/Sample_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Sample_format/*.format.xls outdir=OUTDIR/Tax/Sample_Heat top=35 Draw_heat
 [Job End]
 
 [Job Start]
@@ -118,9 +108,9 @@ CPU	N
 Major	F
 Order	4
 Depend	taxnomy_sample_draw
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Tax/Group_format Group_Format
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Group_format/*.format.xls outdir=OUTDIR/Tax/Group_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Group_format/*.format.xls outdir=OUTDIR/Tax/Group_Heat top=35 Draw_heat
 [Job End]
 
 

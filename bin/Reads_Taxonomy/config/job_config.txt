@@ -3,11 +3,11 @@ Name	Tax
 Memory	1G
 Queue	"all.q"
 CPU	N
-Major	F
+Major	T
 Order	4
-Depend	pb-16s-arrange
-Command	make -f BIN/Reads_Taxonomy/tax.mk config=Para_config asv_seq=OUTDIR/ASV/sample_rep.qza search_db=Para_search_db search_tax=Para_search_db_tax tax_qza=OUTDIR/Tax/tax.qza cpu=5 tax_blast_qza=OUTDIR/Reads_Taxonomy/tax.blast.qza tax_maxreject=100 tax_maxaccept=100  tax_identity=0.97  tax_vsearch
-make -f BIN/Reads_Taxonomy/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample_freq.qza asv_rep=OUTDIR/ASV/sample_rep.qza outdir=OUTDIR/Tax/ tax_stat
+Depend	ASV
+Command	make -f BIN/Reads_Taxonomy/tax.mk config=Para_config asv_seq=OUTDIR/ASV/sample.rep.qza search_db=Para_search_db search_tax=Para_search_db_tax tax_qza=OUTDIR/Tax/tax.qza cpu=5 tax_blast_qza=OUTDIR/Tax/tax.blast.qza tax_maxreject=100 tax_maxaccept=100  tax_identity=0.97  tax_vsearch
+make -f BIN/Reads_Taxonomy/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample.freq.qza asv_rep=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/Tax/ tax_stat
 [Job End]
 
 [Job Start]
@@ -16,9 +16,9 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	T
-Order	3
-Depend	pb-16s-arrange
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_16s_result/PB_16s_arrange/taxnomy.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
+Order	4
+Depend	Tax
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Tax/stat OTU_Stat
 [Job End]
 
 [Job Start]
@@ -27,11 +27,11 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	F
-Order	3
+Order	4
 Depend	taxnomy_stat
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_16s_result/PB_16s_arrange/taxnomy.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Tax/Sample_format Sample_Format
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Sample_format/*.format.xls outdir=OUTDIR/Tax/Sample_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Sample_format/*.format.xls outdir=OUTDIR/Tax/Sample_Heat top=35 Draw_heat
 [Job End]
 
 [Job Start]
@@ -40,9 +40,9 @@ Memory	1G
 Queue	"all.q"
 CPU	N
 Major	F
-Order	3
+Order	4
 Depend	taxnomy_sample_draw
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Tax/Group_format Group_Format
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Group_format/*.format.xls outdir=OUTDIR/Tax/Group_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Tax/Group_format/*.format.xls outdir=OUTDIR/Tax/Group_Heat top=35 Draw_heat
 [Job End]

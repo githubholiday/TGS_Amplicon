@@ -45,18 +45,8 @@ Order	2
 Depend	cutadapt	
 Command	make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
 make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
-[Job End]
-
-[Job Start]
-Name	filter-stat
-Memory	2G
-Queue	"all.q"
-CPU	N
-Major	T
-Order	2
-Depend	collect_cutadapt_stat
-Command	make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/Stat filter_stat
-make -f BIN/Stat/makefile config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/Stat/plot len_stat
+make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/cutadapt filter_stat
+make -f BIN/Stat/makefile config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/cutadapt/plot len_stat
 [Job End]
 
 [Job Start]

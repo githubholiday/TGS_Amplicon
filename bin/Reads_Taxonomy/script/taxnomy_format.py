@@ -126,11 +126,11 @@ def main():
 				outfile.write('\t'.join(out_value)+'\n')
 				if required_type in tax:
 					species_read_count += tax_info[sample_index]
-			#for tax in taxnomy_dic:
-				#if required_type in tax:
 					tax_info = taxnomy_dic[tax]
 					species = tax.split("|"+required_type)[1]
 					sample_tax_num = tax_info[sample_index]
+					print(sample_tax_num)
+					print(species_read_count)
 					rate = '{0:.3f}'.format(sample_tax_num/species_read_count)
 					out = [species, str(sample_tax_num),rate]
 					ratefile.write('\t'.join(out)+'\n')

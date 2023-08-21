@@ -1,0 +1,26 @@
+[Job Start]
+Name	cutadapt
+Queue	"all.q"
+Memory	5G
+CPU	1
+Major	T
+Order	2
+Depend	
+Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fastq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json front_p=Para_front_p_cutadap tail_p=Para_tail_p_cutadap CutAdapt
+make -f BIN/filter/filter.mk software=Para_config cutadapt_json=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.stat sample=$(sample)[1] cutadapt_stat
+make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].fq.stat sample=$(sample)[1] fq_stat
+[Job End]
+
+[Job Start]
+Name	collect_cutadapt_stat
+Queue	"all.q"
+Memory	1G
+CPU	1
+Major	T
+Order	2
+Depend	cutadapt	
+Command	make -f BIN/cutadapt/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
+make -f BIN/cutadapt/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
+make -f BIN/cutadapt/stat.mk config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/cutadapt filter_stat
+make -f BIN/cutadapt/stat.mk config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/cutadapt/plot len_stat
+[Job End]
