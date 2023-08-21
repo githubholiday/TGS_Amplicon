@@ -21,7 +21,7 @@ def main():
 			prefix = each_file.split(".xls")[0]
 			
 			cmd = 'export OPENBLAS_NUM_THREADS=2 && {Rscript} {plot_r} {infile} {prefix}.pdf F\n'.format(Rscript=args.Rscript, plot_r=args.rplot, infile=each_file, prefix=prefix )
-			cmd += '[ -d {prefix}.pdf ] && {convert} {prefix}.pdf {prefix}.png || echo no pdf\n'.format( convert=args.convert, prefix=prefix)
+			cmd += '[ -f {prefix}.pdf ] && {convert} {prefix}.pdf {prefix}.png || echo no pdf\n'.format( convert=args.convert, prefix=prefix)
 			outfile.write(cmd)
 	print("请运行 {0}".format( args.output ))
  	
