@@ -38,6 +38,7 @@ HELP:
 
 prepare_picrust2:
 	echo "############### prepare_picrust2 start at `date` ###############"
+	mkdir -p $(outdir)
 	sed 's/Feature ID/#OTUID/' $(tax_tsv) | sed 's/Taxon/taxonomy/' | sed 's/Consensus/confidence/' > $(outdir)/biom-taxonomy_vsearch.tsv
 	${QIIME2_DIR}/biom add-metadata -i $(outdir)/asv_freq/feature-table.biom \
 	-o $(out_biom) \
@@ -49,6 +50,7 @@ trait=EC,KO
 cpu=10
 Picrust2:
 	echo "############### Picrust2 start at `date` ###############"
+	mkdir -p $(outdir)
 	source $(conda_activate) $(picrust_env) && picrust2_pipeline.py -s $(asv_fa) -i $(vsearch_biom) \
 	-o $(outdir) \
 	--in_traits $(trait) \
