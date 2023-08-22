@@ -55,7 +55,8 @@ tax_vsearch:
 	--p-maxrejects $(tax_maxreject) \
 	--p-maxaccepts $(tax_maxaccept) \
 	--p-perc-identity $(tax_identity) \
-	--p-top-hits-only
+	--p-top-hits-only \
+	--verbose
 	echo "############### tax_vsearch end at `date` ###############"
 
 
