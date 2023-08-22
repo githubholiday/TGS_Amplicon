@@ -218,7 +218,7 @@ Major	F
 Order	6
 Depend	ASV
 Command	make -f BIN/Picrust2/picrust.mk config=Para_config tax_tsv=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Picrust2 out_biom=OUTDIR/Picrust2/vserarch.biom feature_table=OUTDIR/ASV/sample_freq/feature-table.biom prepare_picrust2
-make -f BIN/Picrust2/picrust.mk asv_fa=OUTDIR/ASV/asv_rep/dna-sequences.fasta vsearch_biom=OUTDIR/Picrust2/vserarch.biom trait=EC,KO outdir=OUTDIR/Picrust2/ cpu=5 Picrust2
+make -f BIN/Picrust2/picrust.mk asv_fa=OUTDIR/ASV/sample_rep/dna-sequences.fasta vsearch_biom=OUTDIR/Picrust2/vserarch.biom trait=EC,KO outdir=OUTDIR/Picrust2/ cpu=5 Picrust2
 [Job End]
 
 [Job Start]
