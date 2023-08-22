@@ -71,15 +71,13 @@ NMDS:
 	@echo "===================== Run NMDS Begin at `date` ===================== "
 	mkdir -p ${outdir}
 	${QIIME2_DIR}/Rscript ${BIN}/script/nmds.r ${merge_file} ${cmp} ${outdir}/$(prefix).pdf $(method)
-	${CONVERT} ${outdir}/$(prefix).pdf ${outdir}/$(prefix).png
+	[ -f ${outdir}/$(prefix).pdf ] && ${CONVERT} ${outdir}/$(prefix).pdf ${outdir}/$(prefix).png || echo no ${outdir}/$(prefix).pdf
 	@echo "===================== Run NMDS End at `date` ===================== "
 
 
 PCA_old:
 	@echo "===================== Run PCA Begin at `date` ===================== "
 	mkdir -p ${outdir}
-	#${PYTHON3} ${BIN}/script/braken_report_format.py -i ${sample_format_file} -e ${sample_rate_file} -r ${outdir}/merge.raw.richness.xls -c ${cmp}
-	#cat ${outdir}/merge.raw.richness.xls|sed '2d'|awk -F "|" '{print $$NF}' >${outdir}/merge.richness.xls
 	${PYTHON3} ${BIN}/script/change_format.py ${outdir}/merge.richness.xls ${outdir}/merge.richness.tmp.xls
 	cat ${cmp}|sed '1iname\tgroup'|sed '2d' >${outdir}/cmp.list
 	${Rscript} ${BIN}/script/pca.r ${outdir}/merge.richness.tmp.xls ${outdir}/cmp.list ${outdir}/ FALSE
