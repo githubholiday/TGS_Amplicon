@@ -124,7 +124,7 @@ Order	5
 Depend	taxnomy_sample_draw
 Command	make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*format.xls outdir=OUTDIR/Diversity/format prefix=allsample.merge merge
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.species type=species taxnomy_format
-make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.xls outdir=OUTDIR/Diversity/format prefix=merge.species.normalize qiime_biom
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species..normalize.xls outdir=OUTDIR/Diversity/format prefix=merge.species.normalize qiime_biom
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.xls outdir=OUTDIR/Diversity/format prefix=merge.species qiime_biom
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.genus type=genus taxnomy_format
 [Job End]
