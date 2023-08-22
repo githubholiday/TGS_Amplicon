@@ -102,6 +102,6 @@ PCoA:
 	@echo "===================== Run PCoA Begin at `date` ===================== "
 	mkdir -p $(outdir)
 	$(Rscript) ${BIN}/script/PCoA.r -i $(infile) -c $(cmp) -m $(method) -p $(outdir)/$(pdf_name) -o $(outdir)/$(table_name) -O $(outdir)/$(axis_table)
-	cd $(outdir) && for i in `ls *.pdf`; do [ -f $$i ] && $(CONVERT) $$i `basename $$i .pdf`.png || echo no $$i ;done
+	[ -f $(outdir)/*.pdf ] && cd $(outdir) && for i in `ls *.pdf`; do $(CONVERT) $$i `basename $$i .pdf`.png ;done || echo no pdf file
 	@echo "===================== Run PCoA End at `date` ===================== "
 
