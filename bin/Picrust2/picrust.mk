@@ -38,8 +38,7 @@ HELP:
 
 prepare_picrust2:
 	echo "############### prepare_picrust2 start at `date` ###############"
-	sed 's/Feature ID/#OTUID/' $(tax_tsv) | sed 's/Taxon/taxonomy/' | \
-	sed 's/Consensus/confidence/' > $(outdir)/biom-taxonomy_vsearch.tsv
+	sed 's/Feature ID/#OTUID/' $(tax_tsv) | sed 's/Taxon/taxonomy/' | sed 's/Consensus/confidence/' > $(outdir)/biom-taxonomy_vsearch.tsv
 	${QIIME2_DIR}/biom add-metadata -i $(outdir)/asv_freq/feature-table.biom \
 	-o $(out_biom) \
 	--observation-metadata-fp $(outdir)/biom-taxonomy_vsearch.tsv \
