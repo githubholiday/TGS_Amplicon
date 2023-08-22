@@ -63,7 +63,7 @@ Beta_qiime:
 	${QIIME2} diversity beta --i-table ${qza_file} --p-metric ${method} --o-distance-matrix ${outdir}/beta_qiime_${method}.qza
 	${QIIME2} tools export --input-path ${outdir}/beta_qiime_${method}.qza --output-path ${outdir}/tmp/$(method)
 	${PYTHON3} ${BIN}/script/retain_float.py -i ${outdir}/tmp/$(method)/distance-matrix.tsv -o ${outdir}/beta_qiime_${method}.xls
-	${QIIME2}/Rscript ${BIN}/script/draw_heat.r ${outdir}/tmp/$(method)/distance-matrix.tsv ${outdir}/beta_qiime_${method}.heatmap.pdf
+	${QIIME2_DIR}/Rscript ${BIN}/script/draw_heat.r ${outdir}/tmp/$(method)/distance-matrix.tsv ${outdir}/beta_qiime_${method}.heatmap.pdf
 	${CONVERT} ${outdir}/beta_qiime_${method}.heatmap.pdf ${outdir}/beta_qiime_${method}.heatmap.png
 	@echo "===================== Run Beta_qiime End at `date` ===================== "
 
