@@ -84,7 +84,7 @@ CPU	N
 Major	T
 Order	4
 Depend	Tax
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
+Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
 [Job End]
 
 [Job Start]
@@ -95,9 +95,9 @@ CPU	N
 Major	F
 Order	4
 Depend	taxnomy_stat
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Heat top=35 Draw_heat
 [Job End]
 
 [Job Start]
@@ -108,9 +108,9 @@ CPU	N
 Major	F
 Order	4
 Depend	taxnomy_sample_draw
-Command	make -f BIN/Reads_Taxonomy/makefile config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/makefile config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Heat top=35 Draw_heat
 [Job End]
 
 
