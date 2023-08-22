@@ -142,7 +142,7 @@ main_fun <- function()
     cmp$name <- rownames(cmp)
 
     if ( length(cmp$name) < 5){
-        print("提示：样本数量少于5个，不做NMDS分析，退出")
+        print("提示：样本数量少于5个，不做PCA分析，退出")
         q()
     }
 

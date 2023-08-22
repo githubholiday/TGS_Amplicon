@@ -66,7 +66,7 @@ bac_pco <- data.frame(bac_PCo1,bac_PCo2) %>% as_tibble(rownames = "Sample")
 group = read.table( cmp , sep="\t" , header=T) 
 cmp$name <- rownames(group)
 if ( length(cmp$name ) < 5){
-    print("提示：样本数量少于5个，不做NMDS分析，退出")
+    print("提示：样本数量少于5个，不做PcOA分析，退出")
     q()
 }
 

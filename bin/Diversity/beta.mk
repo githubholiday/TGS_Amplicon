@@ -94,14 +94,14 @@ PCA:
 	${Rscript} ${BIN}/script/pca.r ${infile} ${outdir}/cmp.list ${outdir}/ FALSE
 	${CONVERT} ${outdir}/PCA_analysis/PCA.3d.pdf ${outdir}/PCA_analysis/PCA.3d.png
 	mv ${outdir}/PCA_analysis/PCA_individual_dim1_dim2.pdf ${outdir}/PCA.pdf
-	${CONVERT} ${outdir}/PCA.pdf ${outdir}/PCA.png
-	${CONVERT} ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.png
+	[ -f ${outdir}/PCA.pdf ] && ${CONVERT} ${outdir}/PCA.pdf ${outdir}/PCA.png || echo no ${outdir}/PCA.pdf
+	[ -f ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf ] && ${CONVERT} ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.png || echo no ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf
 	@echo "===================== Run PCA End at `date` ===================== "
 
 PCoA:
 	@echo "===================== Run PCoA Begin at `date` ===================== "
 	mkdir -p $(outdir)
 	$(Rscript) ${BIN}/script/PCoA.r -i $(infile) -c $(cmp) -m $(method) -p $(outdir)/$(pdf_name) -o $(outdir)/$(table_name) -O $(outdir)/$(axis_table)
-	cd $(outdir) && for i in `ls *.pdf`; do $(CONVERT) $$i `basename $$i .pdf`.png ;done
+	cd $(outdir) && for i in `ls *.pdf`; do [ -f $$i ] && $(CONVERT) $$i `basename $$i .pdf`.png || echo no $$i ;done
 	@echo "===================== Run PCoA End at `date` ===================== "
 
