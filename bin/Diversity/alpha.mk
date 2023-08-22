@@ -51,7 +51,7 @@ Alpha_vegan:
 	@echo "===================== Run Alpha_vegan Begin at `date` ===================== "
 	[ -d $(outdir) ] && rm -r $(outdir) || echo "ok"
 	mkdir -p ${outdir}
-	export OPENBLAS_NUM_THREADS=2 && ${QIIME2}/Rscript ${BIN}/script/alpha_diversity.R ${merge_file} ${outdir}/alpha_vegan.tmp.xls
+	export OPENBLAS_NUM_THREADS=2 && ${QIIME2_DIR}/Rscript ${BIN}/script/alpha_diversity.R ${merge_file} ${outdir}/alpha_vegan.tmp.xls
 	if [ -e ${outdir}/alpha_vegan.tmp.xls ] ;\
 		then \
 		sed '1cSample\tChao1\tACE\tObserved_species\tPielou\tShannon\tSimpson' ${outdir}/alpha_vegan.tmp.xls >${outdir}/alpha_vegan_out.xls ;\

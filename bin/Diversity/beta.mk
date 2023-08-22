@@ -60,8 +60,8 @@ Help:
 Beta_qiime:
 	@echo "===================== Run Beta_qiime Begin at `date` ===================== "
 	mkdir -p ${outdir}/tmp/$(method)
-	${QIIME2}/qiime diversity beta --i-table ${qza_file} --p-metric ${method} --o-distance-matrix ${outdir}/beta_qiime_${method}.qza
-	${QIIME2}/qiime tools export --input-path ${outdir}/beta_qiime_${method}.qza --output-path ${outdir}/tmp/$(method)
+	${QIIME2} diversity beta --i-table ${qza_file} --p-metric ${method} --o-distance-matrix ${outdir}/beta_qiime_${method}.qza
+	${QIIME2} tools export --input-path ${outdir}/beta_qiime_${method}.qza --output-path ${outdir}/tmp/$(method)
 	${PYTHON3} ${BIN}/script/retain_float.py -i ${outdir}/tmp/$(method)/distance-matrix.tsv -o ${outdir}/beta_qiime_${method}.xls
 	${QIIME2}/Rscript ${BIN}/script/draw_heat.r ${outdir}/tmp/$(method)/distance-matrix.tsv ${outdir}/beta_qiime_${method}.heatmap.pdf
 	${CONVERT} ${outdir}/beta_qiime_${method}.heatmap.pdf ${outdir}/beta_qiime_${method}.heatmap.png
@@ -70,7 +70,7 @@ Beta_qiime:
 NMDS:
 	@echo "===================== Run NMDS Begin at `date` ===================== "
 	mkdir -p ${outdir}
-	${QIIME2}/Rscript ${BIN}/script/nmds.r ${merge_file} ${cmp} ${outdir}/$(prefix).pdf $(method)
+	${QIIME2_DIR}/Rscript ${BIN}/script/nmds.r ${merge_file} ${cmp} ${outdir}/$(prefix).pdf $(method)
 	${CONVERT} ${outdir}/$(prefix).pdf ${outdir}/$(prefix).png
 	@echo "===================== Run NMDS End at `date` ===================== "
 
