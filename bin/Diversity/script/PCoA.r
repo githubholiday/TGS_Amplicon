@@ -44,6 +44,14 @@ library(dplyr)
 library(ggplot2)
 library(ggsci)
 
+# 读取分组文件
+group = read.table( cmp , sep="\t" , header=T) 
+cmp$name <- rownames(group)
+if ( length(cmp$name ) < 5){
+    print("提示：样本数量少于5个，不做PcOA分析，退出")
+    q()
+}
+
 # 读取物种丰度文件
 dat = read.table(infile,sep="\t",stringsAsFactors = FALSE,quote = "",header=T,row.names=1)
 data = t(dat)
@@ -62,13 +70,7 @@ bac_PCo1  <- bac_pcoa$vectors[,1]
 bac_PCo2  <- bac_pcoa$vectors[,2]
 bac_pco <- data.frame(bac_PCo1,bac_PCo2) %>% as_tibble(rownames = "Sample")
 
-# 读取分组文件
-group = read.table( cmp , sep="\t" , header=T) 
-cmp$name <- rownames(group)
-if ( length(cmp$name ) < 5){
-    print("提示：样本数量少于5个，不做PcOA分析，退出")
-    q()
-}
+
 
 bac_pco2 <- left_join(bac_pco, group, by = "Sample")  
 group_name = group$Group[!duplicated(group$Group)]
