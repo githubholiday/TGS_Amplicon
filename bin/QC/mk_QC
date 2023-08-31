@@ -14,16 +14,35 @@ HELP:
 	@echo Program: mk_QC
 	@echo Version: V1
 	@echo Contactor: mengli@genome.cn
-	@echo Usage:
-	@echo 	make -f mk_QC config= indir= outdir= sample= Merge PB_CCS_QC
-	@echo 参数说明：
-	@echo 	config1: 配置文件，包括软件及相关参数，默认为$(bin)/config/config，可选
-	@echo 	outdir: 输出目录，必须
-	@echo 	sample: 样本名，必须
-	@echo 	indir：输入目录，hifi_reads.bam文件所在的路径；如果多个bam文件夹,请放在indir目录下。indir格式要求：indir/*/*hifi_reads.bam，比须
-	@echo 	Merge: 三代下机数据按照样本名称合并
-	@echo 	PB_CCS_QC: 三代下机数据统计，包括插入片段长度分布图，准确率分布图，数据量，数据产出比例
-	@echo	Stat_qc: 整合多样本的数据统计文件
+	@echo Merge:将不同批次的bam数据按照样本名称合并
+	@echo -e "\t" make -f mk_QC config= indir= outdir= sample= Merge
+	@echo -e "\t" 参数说明：
+	@echo -e "\t" config1: 配置文件，包括软件及相关参数，默认为$(bin)/config/config，可选
+	@echo -e "\t"outdir: 输出目录，必须
+	@echo -e "\t"sample: 样本名，必须
+	@echo -e "\t"indir：输入目录，hifi_reads.bam文件所在的路径；如果多个bam文件夹,请放在indir目录下。indir格式要求：indir/*/*hifi_reads.bam，比须
+	@echo Bam2fq: 三代下机数据转换为fastq格式,且按照指定数量只取前count行
+	@echo -e "\t"make -f mk_QC config= indir= outdir= sample= count=  Bam2fq
+	@echo -e "\t"参数说明：
+	@echo -e "\t"config1: 配置文件，包括软件及相关参数，默认为$(bin)/config/config，可选
+	@echo -e "\t"outdir: 输出目录，必须
+	@echo -e "\t"sample: 样本名，必须
+	@echo -e "\t"indir：输入目录，hifi.bam文件所在的路径
+	@echo -e "\t"count: fastq文件截取，取前count行，count必须为4的倍数，以保证fastq文件的完整性
+	@echo Stat_Plot: 三代下机数据统计，包括插入片段长度分布图，准确率分布图，数据量，数据产出比例
+	@echo -e "\t"make -f mk_QC config= outdir= sample= inbam= Stat_Plot
+	@echo -e "\t"参数说明：
+	@echo -e "\t"config1: 配置文件，包括软件及相关参数，默认为$(bin)/config/config，可选
+	@echo -e "\t"outdir: 输出目录，必须
+	@echo -e "\t"sample: 样本名，必须
+	@echo -e "\t"inbam: 输入的bam文件
+	@echo collect_stat: 将所有样本的输入文件进行合并
+	@echo -e "\t"make -f mk_QC config= outdir= infile= outfile_name= collect_stat
+	@echo -e "\t"参数说明：
+	@echo -e "\t"config1: 配置文件，包括软件及相关参数，默认为$(bin)/config/config，可选
+	@echo -e "\t"outdir: 输出目录，必须
+	@echo -e "\t"infile: 输入的文件，必须
+	@echo -e "\t"outfile_name: 输出文件名，必须
 
 .PHONY:Merge
 Merge:
@@ -36,16 +55,22 @@ Merge:
 	else \
 		${PBMERGE} -o $(outdir)/$(sample).hifi.bam $(indir)/*/*.hifi_reads.bam ;\
 	fi
-	cd $(outdir)/ && $(SMRT_BIN)/bam2fastq -o $(sample).hifi $(outdir)/$(sample).hifi.bam
-	cd $(outdir)/ && $(SMRT_BIN)/bam2fasta -o $(sample).hifi $(outdir)/$(sample).hifi.bam
-
 	@echo "################## MERGE End:`date`"
 
+.PHONY:Stat_Plot
+Bam2fq:
+	@echo "################## Bam2fq Begin:`date`"
+	mkdir -p $(outdir)
+	cd $(outdir)/ && $(SMRT_BIN)/bam2fastq -o $(sample).hifi.raw $(indir)/$(sample).hifi.bam
+	less $(outdir)/$(sample).hifi.raw.fastq.gz |head -$(count) > $(outdir)/$(sample).hifi.fastq && gzip -f $(outdir)/$(sample).hifi.fastq
+	cd $(outdir)/ && $(SMRT_BIN)/bam2fasta -o $(sample).hifi $(indir)/$(sample).hifi.bam
+	@echo "################## Bam2fq End:`date`"
 
-.PHONY:PB_CCS_QC
-PB_CCS_QC:
+
+.PHONY:Stat_Plot
+Stat_Plot:
 	@echo " "
-	@echo "################## QC Begin:`date`"
+	@echo "################## Stat_Plot Begin:`date`"
 	[ -s $(outdir) ] || mkdir -p $(outdir) && echo "dir ok"
 	$(SMRT_BIN)/dataset create --force --type ConsensusReadSet $(outdir)/$(sample).hifi.xml $(inbam)
 	cd $(outdir) && $(SMRT_BIN)/python -m pbreports.tasks.import_dataset_reports --log-level INFO -o $(outdir)/ $(outdir)/$(sample).hifi.xml
@@ -58,11 +83,11 @@ PB_CCS_QC:
 	egrep "max_length|N50|GC" $(outdir)/$(sample).N50_N90.stat.xls|cut -f 1,2 >>$(outdir)/$(sample)_hifireads_stat.xls
 	sed -i "s/max_length: /Max Length\t/g" $(outdir)/$(sample)_hifireads_stat.xls
 	sed -i "s/GC content/GC Content/g" $(outdir)/$(sample)_hifireads_stat.xls
-	@echo "################## QC End:`date`"
+	@echo "################## Stat_Plot End:`date`"
 
 
-.PHONY:Stat_qc
-Stat_qc:
+.PHONY:collect_stat
+collect_stat:
 	@echo "################## merge qc Begin:`date`"
 	[ -s $(outdir) ] || mkdir -p $(outdir) && echo "dir ok"
 	$(CSVTK) -t join $(infile)  > $(outdir)/$(outfile_name)

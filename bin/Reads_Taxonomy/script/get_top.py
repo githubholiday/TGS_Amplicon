@@ -53,6 +53,7 @@ def get_dic(infile):
 			tmp = line.strip().split("\t")
 			tax_name = tmp[0].split('|')[-1]
 			richness = int(tmp[1])
+			if richness == '0' : continue
 			dic[tax_name] = richness
 	return dic
 

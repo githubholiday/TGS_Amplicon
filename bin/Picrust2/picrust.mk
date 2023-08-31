@@ -50,7 +50,7 @@ trait=EC,KO
 cpu=10
 Picrust2:
 	echo "############### Picrust2 start at `date` ###############"
-	mkdir -p $(outdir)
+	[ -d $(outdir) ] && rm -r $(outdir) || echo "no $(outdir) directory"
 	source $(conda_activate) $(picrust_env) && picrust2_pipeline.py -s $(asv_fa) -i $(vsearch_biom) \
 	-o $(outdir) \
 	--in_traits $(trait) \

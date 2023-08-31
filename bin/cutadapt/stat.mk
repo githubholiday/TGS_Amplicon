@@ -34,7 +34,7 @@ filter_stat:
 	mkdir -p $(outdir)
 	$(CSVTK)  summary -t -C '%' -g sample -f length:mean $(read_stat) > $(outdir)/sample_len.xls
 	$(CSVTK) -t join -f 1 $(sample_stat) $(outdir)/sample_len.xls > $(outdir)/sample_raw_stat.xls
-	$(PYTHON3) $(BIN)/script/filter_stat.py -i $(ccs_stat) -l $(outdir)/sample_raw_stat.xls -o $(outdir)/sample_stat.xls
+	$(PYTHON3) $(BIN)/script/filter_stat.py -l $(outdir)/sample_raw_stat.xls -o $(outdir)/sample_stat.xls
 	@echo "===================== Run filter_stat End at `date` ===================== "
 
 len_stat:

@@ -1,0 +1,14 @@
+1.guilds_result.xlsFunGuild功能预测结果文件
+1）OTU：ASV/OTU序列的编号;
+2）Kingdom-Species:对应ASV/OTU对应的界门纲目科属种信息;
+3）Taxon:对应ASV/OTU注释的物种等级，0=keyword,3=Phylum,4=Subphylum,5=Class,6=Subclass,7=Order,8=Suborder,9=Family,10=Subfamily,11=Tribe,12=Subtribe,13=Genus,15=Subgenus,16=Section,17=Subsection,18=Series,19=Subseries,20=Species,21=Subspecies,22=Variety,23=Subvariety,24=Form,25=Subform,26=FormSpecies；
+4）trophicMode：真菌的营养型，主要分为三类：病例营养型（Pathotroph）、共生营养型(SymBiotroph)、腐生营养型（Saprotroph）；
+5）guild：营养型再细分的类型；
+6）trait：其他的功能或者形态特点，例如："Brown Rot","Hypogeous","Poisonous","Soft Rot","WhiteRot"or"Contact Exploration Type"；
+7）growthForm：基础的生长形态分类，如Agaricoid，Boletoid等；
+8）confidenceRanking：该功能预测结果的置信度，一般有三种：Highly Probable（可信）、Probable（相对可信）、Possible（可信度低或未被证实）；
+9）notes：其他相关的信息；
+10）citationSource：该类型的来源，例如发表物、网站等。
+
+2. guild.p*:对功能注释结果统计的绘图结果。
+横坐标为guild类型，纵轴为guild对应的ASV数量。

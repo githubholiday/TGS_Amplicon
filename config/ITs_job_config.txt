@@ -7,7 +7,8 @@ Major	T
 Order	1
 Depend	
 Command	make -f BIN/QC/mk_QC config=Para_config outdir=OUTDIR/Merge_bam/$(sample)[1] indir=Para_data_dir/$(sample)[0] sample=$(sample)[1] Merge
-make -f BIN/QC/mk_QC config=Para_config outdir=OUTDIR/QC/$(sample)[1] inbam=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.bam infa=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fasta.gz sample=$(sample)[1] PB_CCS_QC
+make -f BIN/QC/mk_QC config=Para_config indir=OUTDIR/Merge_bam/$(sample)[1] outdir=OUTDIR/Merge_bam/$(sample)[1] sample=$(sample)[1] count=$(sample)[4] Bam2fq
+make -f BIN/QC/mk_QC config=Para_config outdir=OUTDIR/QC/$(sample)[1] inbam=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.bam infa=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fasta.gz sample=$(sample)[1] Stat_Plot
 [Job End]
 
 
@@ -19,7 +20,7 @@ CPU	1
 Major	T
 Order	1
 Depend	QC
-Command	make -f BIN/QC/mk_QC config=Para_config infile=OUTDIR/QC/*/*_hifireads_stat.xls outfile_name=All_hifireads_stat.xls outdir=OUTDIR/QC Stat_qc
+Command	make -f BIN/QC/mk_QC config=Para_config infile=OUTDIR/QC/*/*_hifireads_stat.xls outfile_name=All_hifireads_stat.xls outdir=OUTDIR/QC collect_stat
 [Job End]
 
 [Job Start]
@@ -30,9 +31,9 @@ CPU	1
 Major	T
 Order	2
 Depend	
-Command	make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fastq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json front_p=Para_front_p_cutadap tail_p=Para_tail_p_cutadap CutAdapt
-make -f BIN/filter/filter.mk software=Para_config cutadapt_json=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.stat sample=$(sample)[1] cutadapt_stat
-make -f BIN/filter/filter.mk software=Para_config infq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].fq.stat sample=$(sample)[1] fq_stat
+Command	make -f BIN/cutadapt/filter.mk software=Para_config infq=OUTDIR/Merge_bam/$(sample)[1]/$(sample)[1].hifi.fastq.gz outfq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outjson=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json front_p=Para_front_p_cutadap tail_p=Para_tail_p_cutadap CutAdapt
+make -f BIN/cutadapt/filter.mk software=Para_config cutadapt_json=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.json outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].cutadapt.stat sample=$(sample)[1] cutadapt_stat
+make -f BIN/cutadapt/filter.mk software=Para_config infq=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].filter.fq.gz outfile=OUTDIR/cutadapt/$(sample)[1]/$(sample)[1].fq.stat sample=$(sample)[1] fq_stat
 [Job End]
 
 [Job Start]
@@ -43,16 +44,16 @@ CPU	1
 Major	T
 Order	2
 Depend	cutadapt	
-Command	make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
-make -f BIN/filter/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
-make -f BIN/Stat/makefile config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv ccs_stat=OUTDIR/QC/All_hifireads_stat.xls outdir=OUTDIR/cutadapt filter_stat
-make -f BIN/Stat/makefile config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/Stat/config/stat.conf outdir=OUTDIR/cutadapt/plot len_stat
+Command	make -f BIN/cutadapt/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.cutadapt.stat outfile=OUTDIR/cutadapt/cutadapter_stat.tsv collect_stat
+make -f BIN/cutadapt/filter.mk software=Para_config infile=OUTDIR/cutadapt/*/*.fq.stat outfile=OUTDIR/cutadapt/cutadapter.read_stat.tsv collect_fq_stat
+make -f BIN/cutadapt/stat.mk config=Para_config  read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_stat=OUTDIR/cutadapt/cutadapter_stat.tsv outdir=OUTDIR/cutadapt filter_stat
+make -f BIN/cutadapt/stat.mk config=Para_config read_stat=OUTDIR/cutadapt/cutadapter.read_stat.tsv sample_list=Para_sample_list stat_conf=BIN/cutadapt/config/ITs.stat.conf outdir=OUTDIR/cutadapt/plot len_stat
 [Job End]
 
 [Job Start]
 Name	ASV
 Queue	"all.q"
-Memory	10G
+Memory	50G
 CPU	1
 Major	T
 Order	3
@@ -73,7 +74,7 @@ Major	T
 Order	4
 Depend	ASV
 Command	make -f BIN/Reads_Taxonomy/tax.mk config=Para_config asv_seq=OUTDIR/ASV/sample.rep.qza search_db=Para_search_db search_tax=Para_search_db_tax tax_qza=OUTDIR/Tax/tax.qza cpu=5 tax_blast_qza=OUTDIR/Tax/tax.blast.qza tax_maxreject=100 tax_maxaccept=100  tax_identity=0.97  tax_vsearch
-make -f BIN/Reads_Taxonomy/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample_freq.qza asv_rep=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/Tax/ tax_stat
+make -f BIN/Reads_Taxonomy/tax.mk config=Para_config tax_qza=OUTDIR/Tax/tax.qza asv_freq=OUTDIR/ASV/sample.freq.qza asv_rep=OUTDIR/ASV/sample.rep.qza outdir=OUTDIR/Tax/ tax_stat
 [Job End]
 
 [Job Start]
@@ -84,7 +85,7 @@ CPU	N
 Major	T
 Order	4
 Depend	Tax
-Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv stat_file=OUTDIR/Stat/sample_stat.xls outdir=OUTDIR/Taxnomy/stat OTU_Stat
+Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv stat_file=OUTDIR/cutadapt/sample_stat.xls outdir=OUTDIR/Tax/stat OTU_Stat
 [Job End]
 
 [Job Start]
@@ -95,9 +96,9 @@ CPU	N
 Major	F
 Order	4
 Depend	taxnomy_stat
-Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/PB_result/PB_16s_arrange/taxnomy.tsv outdir=OUTDIR/Taxnomy/Sample_format Sample_Format
-make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*.format.xls outdir=OUTDIR/Taxnomy/Sample_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/Tax/Sample_format Sample_Format
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Tax/Sample_format/*.format.xls outdir=OUTDIR/Tax/Sample_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Tax/Sample_format/*.format.xls outdir=OUTDIR/Tax/Sample_Heat top=35 Draw_heat
 [Job End]
 
 [Job Start]
@@ -108,9 +109,9 @@ CPU	N
 Major	F
 Order	4
 Depend	taxnomy_sample_draw
-Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config indir=OUTDIR/Taxnomy/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Taxnomy/Group_format Group_Format
-make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Rich top=10 Draw_rich
-make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Taxnomy/Group_format/*.format.xls outdir=OUTDIR/Taxnomy/Group_Heat top=35 Draw_heat
+Command	make -f BIN/Reads_Taxonomy/stat.mk config=Para_config indir=OUTDIR/Tax/Sample_format/ group_file=Para_group_file outdir=OUTDIR/Tax/Group_format Group_Format
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Tax/Group_format/*.format.xls outdir=OUTDIR/Tax/Group_Rich top=10 Draw_rich
+make -f BIN/Reads_Taxonomy/stat.mk config=Para_config infile=OUTDIR/Tax/Group_format/*.format.xls outdir=OUTDIR/Tax/Group_Heat top=35 Draw_heat
 [Job End]
 
 
@@ -122,11 +123,12 @@ CPU	2
 Major   T
 Order	5
 Depend	taxnomy_sample_draw
-Command	make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Taxnomy/Sample_format/*format.xls outdir=OUTDIR/Diversity/format prefix=allsample.merge merge
+Command	make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Tax/Sample_format/*format.xls outdir=OUTDIR/Diversity/format prefix=allsample.merge merge
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.species type=species taxnomy_format
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.xls outdir=OUTDIR/Diversity/format prefix=merge.species.normalize qiime_biom
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.species.xls outdir=OUTDIR/Diversity/format prefix=merge.species qiime_biom
 make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/allsample.merge.xls outdir=OUTDIR/Diversity/format prefix=merge.genus type=genus taxnomy_format
+make -f BIN/Diversity/format.mk config=Para_config infile=OUTDIR/Diversity/format/merge.genus.xls outdir=OUTDIR/Diversity/format prefix=merge.genus qiime_biom
 [Job End]
 
 [Job Start]
@@ -209,22 +211,23 @@ Command	make -f BIN/Diversity/beta.mk config=Para_config infile=Para_outdir/Dive
 Command	make -f BIN/Diversity/beta.mk config=Para_config infile=Para_outdir/Diversity/format/merge.species.xls cmp=Para_sample_list method=jaccard pdf_name=PCoA_ellipse_jaccard.pdf table_name=PCoA_jaccard.xls axis_table=PCoA_axis_jaccard.xls outdir=Para_outdir/Diversity/Beta_qiime/PCoA PCoA
 [Job End]
 
-
 [Job Start]
 Name	FUNGuild
-Memory	1G
+Memory	5G
 Queue	"all.q"
 CPU	N
+Qsub	False
 Major	T
 Thread	1
 Order	6
 Depend	Diversity-format
-Command	make -f BIN/FUNGuild/makefile config=Para_config indir=Para_outdir/Taxnomy/stat FunGuild
+Command	make -f BIN/FUNGuild/makefile config=Para_config tax=OUTDIR/Tax/merge_qzv_export/metadata.tsv outdir=OUTDIR/FunGuild/ funguild
+make -f BIN/FUNGuild/makefile config=Para_config infile=OUTDIR/FunGuild/tax.taxa.guilds.txt outdir=OUTDIR/FunGuild prefix=funguild funguild_stat
 [Job End]
 
 [Job Start]
 Name	RDA_CCA
-Memory	1G
+Memory	5G
 Queue	"all.q"
 CPU	N
 Major	T
@@ -258,7 +261,7 @@ Command	make -f BIN/anosim/mk_anosim config=Para_config infile=Para_outdir/Diver
 
 [Job Start]
 Name	Diff
-Memory	5G
+Memory	20G
 CPU	2
 Queue	"all.q"
 Major	T
@@ -275,7 +278,7 @@ CPU	N
 Major	T
 Order	7
 Command	make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini  upload_dir=OUTDIR/Report/upload outfile=OUTDIR/Report/report.config Get_report_conf
-make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini template=BIN/Report/16s.template upload_config=BIN/Report/upload.config indir=OUTDIR outdir=OUTDIR/Report Get_Upload
+make -f BIN/Report/makefile config=Para_config project_conf=OUTDIR/../config.ini template=BIN/Report/config/template upload_config=BIN/Report/config/upload.config indir=OUTDIR outdir=OUTDIR/Report Get_Upload
 make -f BIN/Report/makefile config=Para_config indir=OUTDIR outdir=OUTDIR/Report template=OUTDIR/Report/template.new report_conf=OUTDIR/Report/report.config Report
 make -f BIN/Report/makefile config=Para_config project_id=Para_project_id analysis_dir=OUTDIR pipeline_record
 [Job End]

@@ -128,13 +128,13 @@ def get_env_file(info_dir):
 # ====== 信搜处理模块 =================================
 
 class Pipe_Info():
-	def __init__( self, info_conf, analysis_dir, config_dic, filter_dir, env_file ):
+	def __init__( self, info_conf, analysis_dir, config_dic, filter_dir, env_file, read_count ):
 		self.info_conf = info_conf
 		self.analysis_dir = analysis_dir
 		self.config_dic = config_dic
 		self.filter_dir = filter_dir
 		self.env_file = env_file
-
+		self.read_count = read_count
 		self.sample_list = '{0}/sample.list'.format( self.analysis_dir )
 		self.config_file = '{0}/config.ini'.format( self.analysis_dir )
 		self.cmp_file = '{0}/cmp.txt'.format( self.analysis_dir )
@@ -198,9 +198,10 @@ class Pipe_Info():
 			sample_name = sample_info[1]
 			sample_group = sample_info[3]
 			sample_descibe = sample_info[2]
+			sample_read_count = random_count(self.read_count, sample_name, rate=0.1)
 			sample_info_str = '\t'.join([sample_name,sample_group,sample_descibe])
 			sample_list_file.write(sample_info_str+'\n')
-			config_sample_str = '\t'.join([sample,sample_name,sample_group,sample_descibe])
+			config_sample_str = '\t'.join([sample,sample_name,sample_group,sample_descibe,str(sample_read_count)])
 			self.config.set('sample',config_sample_str)
 						
 	def config_cmp( self) :
@@ -307,6 +308,17 @@ class Pipe_Info():
 				my_run(run_cmd)
 			else:
 				my_log.info("请手动投递脚本:{0}".format( work_shell ))
+				
+def random_count( read_count, sample_name, rate=0.1 ):
+	'''
+	 根据每个样本的read_count，在read_count-read_count*(1+rate)之间随机取值
+	'''
+	import random
+	read_count = int(read_count)
+	random.seed(sample_name)
+	random_read_count = math.ceil(read_count*(1+rate))
+	random_count = random.randint(read_count, random_read_count)
+	return random_count*4
 
 def main():
 	parser=argparse.ArgumentParser(description=__doc__,
@@ -315,6 +327,7 @@ def main():
 	parser.add_argument('-c','--config',help='config_file',dest='config',default='{0}/../../config/config.txt'.format( bindir))
 	parser.add_argument('-i','--indir',help='indir of analysis',dest='indir',required=True)
 	parser.add_argument('-o','--outdir',help='outdir,default=indir',dest='outdir')
+	parser.add_argument('--read_count',help='the read count of each sample',type=int, dest='read_count',default=10000)
 	parser.add_argument('-r','--run',help='run or not',action='store_true')
 	args=parser.parse_args()
 	
@@ -349,7 +362,7 @@ def main():
 	env_file = get_env_file(info_dir)
 
     # 获取项目的config.ini文件以及投递脚本
-	my_pipe = Pipe_Info(info_json, analysis_dir, config_dic, filter_dir, env_file)
+	my_pipe = Pipe_Info(info_json, analysis_dir, config_dic, filter_dir, env_file, args.read_count)
 	my_pipe.config_write()
 	my_pipe.generate_work_shell( args.run)
 

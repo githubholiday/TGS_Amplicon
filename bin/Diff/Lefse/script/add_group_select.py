@@ -102,7 +102,7 @@ def main():
 	with open( args.infile, 'r') as input, open( args.outfile, 'w') as output:
 		sample_index_list = []
 		for line in input:
-			if line.startswith('species'):
+			if line.startswith('Sample'):
 				tmp = line.rstrip().split('\t')
 				sample_list = tmp[1:]
 				group_list, sample_index_list = get_group_list(sample_list, sample_dict)

@@ -81,7 +81,7 @@ Draw_rich:
 	@echo "===================== Run Draw_rich Begin at `date` ===================== "
 	mkdir -p $(outdir)
 	$(PYTHON3) $(BIN)/script/get_top.py -i $(infile) -o $(outdir) -t $(top) -p richness
-	$(PYTHON3) $(BIN)/script/generate_rich_plot_sh.py -i $(outdir)/*$(top)_top.xls -o $(outdir)/${top}_rich_plot.sh --Rscript $(QIIME2_Dir)/Rscript --convert $(CONVERT) -r $(BIN)/script/draw_richeness.r
+	$(PYTHON3) $(BIN)/script/generate_rich_plot_sh.py -i $(outdir)/*$(top)_top.xls -o $(outdir)/${top}_rich_plot.sh --Rscript $(QIIME2_DIR)/Rscript --convert $(CONVERT) -r $(BIN)/script/draw_richeness.r
 	sh $(outdir)/${top}_rich_plot.sh
 	@echo "===================== Run Draw_rich End at `date` ===================== "
 
@@ -89,6 +89,6 @@ Draw_heat:
 	@echo "===================== Run Draw_heat Begin at `date` ===================== "
 	mkdir -p $(outdir)
 	$(PYTHON3) $(BIN)/script/get_top.py -i $(infile) -o $(outdir) -t $(top) -p heatmap
-	$(PYTHON3) $(BIN)/script/generate_heat_plot_sh.py -i $(outdir)/*$(top)_top.xls -o $(outdir)/${top}_heat_plot.sh --Rscript $(QIIME2_Dir)/Rscript --convert $(CONVERT) -r $(BIN)/script/draw_heat.r
+	$(PYTHON3) $(BIN)/script/generate_heat_plot_sh.py -i $(outdir)/*$(top)_top.xls -o $(outdir)/${top}_heat_plot.sh --Rscript $(QIIME2_DIR)/Rscript --convert $(CONVERT) -r $(BIN)/script/draw_heat.r
 	sh $(outdir)/${top}_heat_plot.sh
 	@echo "===================== Run Draw_heat End at `date` ===================== "

@@ -1,0 +1,365 @@
+
+Title:$(PROJECT_NAME)
+EmptyLine:40;
+@@@@project_info
+MainMenu: 项目信息
+SubMenu: 原理介绍
+P:#,;#微生物多样性检测是研究环境样品中微生物群落结构的最简单有效的方法。目前，安诺三代微生物多样性是基于 PacBio 公司单分子实时测序（SMRT Cell）的方法，利用其长读长的测序策略和单碱基准确率的特点（平均读取长度可达20kb，HiFi读取准确率>99.9%），对样本中特征序列进行扩增，建库，测序和分析，通过分析结果可以揭示环境样品中的物种组成，物种多样性特征，预测基因功能信息等。特征序列的选择细菌一般采用16S 全长序列，真菌一般为ITS全长序列或者18S全长序列。
+P:#,;#具体的分析流程为通过对Hifi数据的过滤和聚类，进行物种注释和丰度分析，以揭示样本的物种组成；继而进行α多样性分析和β多样性分析，从不同维度说明样本中微生物的多样性表征；再进行差异物种分析，解析不同分组间的差异物种；最后通过相关性分析和功能预测分析等，进一步解析样本之间的差异。
+P:#,;#与二代测序结果相比，三代微生物多样性可以对样本中特征序列的全长进行测序和分析，不仅能获得环境样本中真正意义上的“种”水平的物种鉴定信息，还能对环境样品中特别关注的微生物物种进行追踪定位。
+
+@@@@analysis_pipeline
+P:#,;#生信分析流程如下：
+Image:upload/public-picture/pipeline_analysis.png,400,4,分析流程图
+
+@@@@Stat
+MainMenu: 数据处理和统计
+SubMenu: 样本信息
+P:#,;#本项目的样本信息如下：
+Table:upload/*Stat/sample_info.xls,4,,600,,0,样本信息收集表
+PRE:,,67;
+（1）Sample：样本名称；
+（2）Group：样本分组信息；
+（3）Description：样本描述。
+PRE
+
+@@@@QC
+SubMenu:下机数据统计
+P:#,;#PacBio测序的下机数据的保存格式为BAM，下机的Subreads使用PacBio官方软件SMRT Link中的ccs模块进行CCS分析得到HiFi reads，基于HiFi reads进行后续的分析。
+P:#,;#数据量信息如下表：
+Table:upload/*Stat/raw_stat.xls,,8,850,,0,HiFi Reads统计表
+PRE:,,;
+（1）Sample：样本名称；
+（2）HiFi Reads：下机HiFi Reads数目；
+（3）HiFi Yield (bp)：HiFi Reads碱基总数；
+（4）HiFi Read Length (mean, bp): HiFi Reads平均长度；
+（5）HiFi Read Quality (median) ：HiFi Reads质量值中位数；
+（6）Max Length：最长的HiFi Reads长度；
+（7）N50：HiFi Reads的N50；
+（8）GC content: HiFi Reads的GC含量。
+PRE
+P:#,;#HiFi Reads统计结果下载:
+Excel:upload/*Stat/raw_stat.xls,,,HiFi Reads统计结果下载链接：
+P:#,;#绘制各个样本的HiFi Reads准确度分布统计图如下：
+Image:upload/*Stat/*/*_hifi_accuracy_hist.png,400,4,HiFi Reads准确度分布图
+P:#,;#横坐标为质量值，纵坐标为reads数量，可以通过上图看到全部HiFi Reads整体的质量分布。
+P:#,;#HiFi Reads准确度分布图下载链接：
+Excel:upload/*Stat/*/*_hifi_accuracy_hist.png,,,HiFi Reads准确度分布图下载链接：
+P:#,;#绘制各个样本的HiFi Reads长度分布统计图如下：
+Image:upload/*Stat/*/*_hifi_readlength_hist.png,400,4,HiFi Reads长度分布图
+P:#,;#横轴为HiFi reads长度，纵轴为HiFi reads数量，可以通过上图看到全部HiFi Reads整体的长度分布。
+P:#,;#HiFi Reads长度分布图下载链接：
+Excel:upload/*Stat/*/*_hifi_readlength_hist.p*,,,HiFi Reads长度分布图下载链接：
+
+@@@@filter
+SubMenu: 过滤数据统计
+P:#,;#数据过滤（去除接头，引物，嵌合体）后的数据统计表，如下：
+Table:upload/*Stat/sample_stat.xls,4,,600,,0,样本过滤统计表
+PRE:,,;
+（1）Sample:样品名称；
+（2）Raw Reads：下机HiFi Reads数目；
+（3）Effective Reads：数据过滤后的HiFi Reads数目，即有效数据；
+（4）Effective Rate(%)：有效数据比例，即100*(Effective Reads/Raw Reads)；
+（5）Average len(bp)：Effective Reads的平均长度。
+PRE
+P:#,;#样本过滤统计表下载链接：
+Excel:upload/*Stat/sample_stat.xls,,,样本过滤统计表：
+P:#,;#对每个样本的有效数据的长度进行统计，并绘制各样本不同长度范围内的序列数分布图，如下：
+Image:upload/*_Stat/len_plot/*.png,400,4,样本数据长度分布图
+P:#,;#横坐标为长度范围（bp），纵坐标为对应长度范围内的reads数量
+P:#,;#样本数据长度分布图下载链接：
+Excel:upload/*_Stat/len_plot/*.p*,,,样本数据长度分布图：
+
+
+@@@@ASV
+MainMenu: ASV分析
+SubMenu: ASV统计
+P:#,;#为了研究样品的物种组成多样性，对所有样品的Effective Reads进行聚类，以100%的一致性（Identity）将序列聚类成为ASVs（Amplicon Sequence Variants），每个ASV对应于一种代表序列。
+P:#,;#使用qimm2 dada2_denoise对Reads在97.0%的相似度水平下进行聚类、获得ASV。统计每个样本中的ASV数量，并进行展示，如下表。
+Table:upload/*ASV/ASV_stat.xls,3,3,600,,0,ASV统计结果表
+PRE:,,;
+（1）Sample：样本名称；
+（2）ASV Number：对应样本的ASV数量；
+（3）Read Number：对应样本所有ASV对应的reads数量。
+PRE
+Excel:upload/*ASV/ASV_stat.xls,,,ASV统计结果表下载链接：
+
+@@@@Taxnomy
+MainMenu: 物种注释
+SubMenu: 基本介绍
+P:#,;#以Silva.138为参考数据库使用朴素贝叶斯分类器结合比对的方法对特征序列进行分类学注释,可得到每个特征对应的物种分类信息，进而在各水平（phylum，class，order，family，genus，species）统计各样品群落组成，利用QIIME软件生成不同分类水平上的物种丰度表，再利用R语言工具绘制成样品各分类学水平下的群落结构图。
+@@@@taxnomy_stat
+SubMenu: 物种分类统计
+P:#,;#各样本进行物种注释后，统计所有样本注释上的reads数/有效reads数，统计表如下：
+Table:upload/*Tax/taxnomy.rate.xls,4,4,600,,0,物种注释比例表
+PRE:,,;
+（1）Sample：样本名称；
+（2）Effective Read：有效read数；
+（3）Taxonomy Read：注释上物种的read数；
+（4）Rate(%)：100*注释上物种的read数/有效read数。
+PRE
+P:#,;#物种注释比例表下载链接：
+Excel:upload/*Tax/taxnomy.rate.xls,,,物种注释比例表下载链接：
+P:#,;#将各个样本在不同物种分类层级上注释到的类型数量进行统计，物种注释统计表，如下：
+Table:upload/*Tax/Species_count.xls,8,3,600,,0,物种注释统计表
+PRE:,,;
+（1）Sample：样本名称；
+（2）首行其他列：依次为界门纲目科属种；
+（3）数据：对应样本注释到不同物种分类层级上的种类数量。
+PRE
+P:#,;#物种注释统计表下载链接：
+Excel:upload/*Tax/Species_count.xls,,,物种注释统计表下载链接：
+
+@@@@taxnomy_rich
+SubMenu: 物种丰度统计
+ThirdMenu:基于样本统计
+P:#,;#基于不同物种分类层级（门、纲、目、科、属、种）的物种丰度，筛选并绘制各样本中不同分类层级下丰度排名前10位的物种丰度堆积条形图。以属的丰度统计图为示例展示，其他物种分类等级丰度统计图可从下方下载链接获取。
+Image:upload/*Tax/Sample/Richness/richness_5_Genus_10_top.png,400,4,样本属的丰度堆积图
+P:#,;#横坐标为样本名称，纵坐标为个样本对应物种的绝对丰度占比，不同颜色为不同物种，颜色图例见图右侧。
+P:#,;#样本物种丰度堆积图下载链接：
+Excel:upload/*Tax/Sample/Richness/*pdf,,,样本物种丰度堆积图下载链接：
+P:#,;#样本物种丰度聚类热图下载链接：
+Excel:upload/*Tax/Sample/Heatmap//*pdf,,,样本物种丰度聚类热图下载链接：
+
+@@@@taxnomy_group
+ThirdMenu:基于比较组统计
+P:#,;#基于不同物种分类层级（门、纲、目、科、属、种）的不同样本的物种丰度，将同一个分组中所有样本的物种信息进行汇总，筛选并绘制各组中不同分类层级下丰度排名前10位的物种丰度堆积条形图。以属的丰度统计图为示例展示，其他物种分类等级丰度统计图可从下方下载链接获取。
+Image:upload/*Tax/Group/Richness/richness_5_Genus_10_top.png,400,4,组的属的丰度堆积图
+P:#,;#横坐标为组名，纵坐标为各分组对应物种的绝对丰度占比，不同颜色为不同物种，颜色图例见图右侧。
+P:#,;#分组丰度堆积图下载链接：
+Excel:upload/*Tax/Group/Richness/*pdf,,,分组物种丰度堆积图下载链接：
+P:#,;#分组物种丰度聚类热图下载链接：
+Excel:upload/*Tax/Group/Heatmap/*pdf,,,分组物种丰度聚类热图下载链接：
+
+@@@@krona
+SubMenu: Krona物种注释
+P:#,;#挑选出OTU/ASV分类学水平上 Top80丰度比例的特征序列，使用kraken2进行物种注释，并使用Krona进行可视化展示。Krona结果详解参考：https://github.com/marbl/Krona/wiki，示例和结果说明如下所示：
+Image:upload/public-picture/krona_example.png,400,,Krnona网页结果打开示例图
+P:#,;#圆圈从内到外依次代表不同的分类级别（界门纲目科属种）；扇形的大小代表不同物种的相对比例。
+P:#,;#全部样品物种分类Krona可视化网页结果下载链接：
+Excel:upload/*Tax/Krona/*,,,全部样品物种分类Krnona可视化网页下载链接：
+P:#,;#使用网页直接打开index.html文件即可查看所有样本的信息。
+
+
+@@@@alpha
+MainMenu:Alpha多样性分析
+@@@@alpha_index
+SubMenu:Alpha多样性指数统计
+P:#,;#Alpha多样性是指一个特定区域或生态系统内的多样性，是反映丰富度和均匀度的综合指标。Alpha多样性主要与两个因素有关：一是种类数目，即丰富度；二是多样性，即群落中个体分配上的均匀性。群落丰富度（Community richness）的指数主要包括Chao1指数和ACE指数，另外，还有Observed_features代表每个样本中直观数量统计。群落多样性（Community diversity）的指数，包括Shannon指数、Simpson指数和Pielou。
+
+
+P:#,;#使用 QIIME2软件，对样品Alpha多样性指数进行评估。各样品Alpha多样性指数值统计如下表所示。
+Table:upload/*Diversity/Alpha/alpha_index_stat.xls,4,,650,,alpha多样性指标统计表
+PRE:,,;
+（1）Sample：样本名称；
+（2）Chao1：Chao1指数是物种数目的衡量标准之一，它考虑3个因素，一是物种数目，二是只有1条序列的物种数目，三是2条序列的物种数目，Chao1指数越大，表明某群落物种数目较多，并且Chao1指数受1条和2条序列的物种影响较大；
+（3）ACE：基于丰度的覆盖估计值（Abundance-based Coverage Estimator, ACE），用于估计群落中含有物种数目的指数，ACE指数越大，表明群落中物种数目越大；
+（4）Observed_features：每个样本中能够观察到物种数量，与物种的多少无关；
+（5）Pielou：Pielou的均匀度指数（Pielou’s Evenness Index），是最常用的均匀度指数，受到香农指数与observed_features的影响；
+（6）Shannon：香农指数，香农指数值越高，表明群落的α多样性越高，并且该指数计算时受丰度低的物种影响较大；
+（7）Simpson：辛普森指数（Simpson index），Simpson 指数值越大，说明群落多样性越低。辛普森指数在计算时将丰度高的物种设置了较大权重，所以高丰度物种较多时该指数值较大。
+PRE
+P:#,;#alpha多样性指标统计表下载链接：
+Excel:upload/*Diversity/Alpha/alpha_index_stat.xls,,,alpha多样性指标统计表下载链接：
+
+@@@@alpha_de
+SubMenu:多样性差异分析
+P:#,;#对于有分组的样本(每组样本数≥3)，将上表中的指标数据绘制成箱线图，以直观地展示不同样本组之间的alpha多样性的差异，默认通过Student t 检验，验证差异的显著性，如果比较组过多，仅展示3个比较组的情况。
+Image:upload/*Diversity/Alpha/*.png,400,4,alpha多样性指标图
+P:#,;#横坐标为组名，纵坐标为指标值，ns:0.05< p <=1，*: 0.01< p <=0.05，**: 0.001< p <=0.01，***: 0.0001< p <= 0.001，****: p <= 0.0001
+P:#,;#alpha多样性指标图下载链接：
+Excel:upload/*Diversity/Alpha/*.pdf,,,alpha多样性指标图下载链接：
+
+@@@@alpha_curve
+SubMenu:稀释性曲线
+P:#,;#稀释性曲线(Rarefaction Curve)从样本中随机抽取一定数量的序列，统计这些序列所代表的物种数目，并以序列数与物种数来构建曲线，用于验证测序数据量是否足以反映样品中的物种多样性，并间接反映样品中物种的丰富程度。下图反映了持续抽样下新特征（新物种）出现的速率：在一定范围内，随着测序条数的加大，若曲线表现为急剧上升则表示群落中有大量物种被发现；当曲线趋于平缓，则表示此环境中的物种并不会随测序数量的增加而显著增多。稀释曲线可以作为对各样本测序量是否充分的判断,曲线急剧上升表明测序量不足，需要增加序列条数；反之，则表明样品序列充分，可以进行数据分析。
+Image:upload/*Diversity/Alpha/allsample.rarefaction.curve.png,400,4,稀释曲线图
+P:#,;#每条曲线对应一个样品。
+P:#,;#横坐标为物种按丰度排序的序号，纵坐标为对应的物种的相对丰度。
+P:#,;#稀释曲线图下载链接：
+Excel:upload/*Diversity/Alpha/allsample.rarefaction.curve.pdf,,,稀释曲线图下载链接：
+
+@@@@beta
+MainMenu: Beta多样性分析
+@@@@beta_heatmap
+SubMenu: 距离矩阵热图
+P:#,;#Beta多样性是可用于比较不同样品在物种多样性方面存在的差异情况。样品间的物种丰度分布差异程度可通过统计学中的距离进行量化分析，使用统计算法binary jaccard、 bray curtis、 weighted unifrac(限细菌)、 unweighted unifrac (限细菌)等，计算两两样品间距离，获得距离矩阵，其中Unifrac距离是在普通beta距离的基础上添加了进化距离。最后，通过多变量统计学方法主成分分析（PCA，Principal Component Analysis），主坐标分析（PCoA，Principal Co-ordinates Analysis），无度量多维标定法（NMDS，Non-Metric Multi-Dimensional Scaling）等方法，从中发现不同样品（组）间的差异。
+P:#,;#本项目基于两种统计算法binary jaccard和bray curtis获取距离矩阵并绘制热图。热图如下：
+Image:upload/*Diversity/Beta/beta_qiime_*.heatmap.png,400,4,距离矩阵热图
+P:#,;#图中热图颜色越接近蓝色表示两个样本的微生物群落差异越小，越接近红色表示两个样本微生物群落之间的差异越大。
+P:#,;#距离矩阵热图下载链接：
+Excel:upload/*Diversity/Beta/beta_qiime_*.heatmap.pdf,,,距离矩阵热图下载链接：
+P:#,;#距离矩阵表下载链接：
+Excel:upload/*Diversity/Beta/beta_qiime_*.xls,,,距离矩阵表下载链接：
+
+@@@@beta_pca
+SubMenu: PCA分析
+P:#,;#主成分分析PCA（Principal Component Analysis）是一种使用最广泛的数据降维算法。PCA的主要思想是将n维特征映射到k维上，这k维是全新的正交特征也被称为主成分，是在原有n维特征的基础上重新构造出来的k维特征。通过这种降维，PCA 可以找到距离矩阵中最主要的坐标，把复杂的数据用一系列的特征值和特征向量进行排序后，选择主要的前几位特征值 ，来表示样品之间的关系，通过PCA 可以观察个体或群体间的差异。
+P:#,;#本项目以种层级的物种注释做PCA分析，结果如下：
+Image:upload/*Diversity/Beta/PCA/PCA.png,,,PCA分析
+P:#,;#图中的每个点表示一个样品，同一个组的样品使用同一种颜色表示。
+P:#,;#横坐标为第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标为第二主成分，百分比表示第二主成分对样品差异的贡献值。
+P:#,;#PCA分析下载链接：
+Excel:upload/*Diversity/Beta/PCA/*,,,PCA分析下载链接：
+@@@@beta_pcoa
+SubMenu: PCoA分析
+P:#,;#主坐标分析（PCoA，Principal Co-ordinates Analysis），将样本数据经过不同距离算法获得样本距离矩阵的投影。我们基于binary jaccard、 bray curtis距离来进行PCoA分析，并选取贡献率最大的主坐标组合进行作图展示。如果样品距离越接近，表示物种组成结构越相似，因此群落结构相似度高的样品倾向于聚集在一起，群落差异很大的样品则会远远分开。
+P:#,;#本项目以种层级的物种注释做PCoA分析，结果如下：
+Image:upload/*Diversity/Beta/PCoA/PCoA*.png,,,PCoA分析
+P:#,;#图中每个点代表一个样品，不同颜色代表不同分组。
+P:#,;#椭圆形圈表示其为95%置信椭圆(即该样本组假如有100个样本会有95个落在其中)。横坐标表示第一主成分，百分比则表示第一主成分对样品差异的贡献值；纵坐标表示第二主成分，百分比表示第二主成分对样品差异的贡献值。
+P:#,;#PCoA分析结果下载链接：
+Excel:upload/*Diversity/Beta/PCoA/*,,,PCoA分析结果下载链接：
+
+@@@@beta_nmds
+SubMenu: NMDS分析
+P:#,;#非度量多维标度分析（Non-metricMultidimensional Scaling，NMDS）是一种将多维空间的研究对象（样本或变量）简化到低维空间进行定位、分析和归类，同时又保留对象间原始关系的数据分析方法。在保持原始数据次序关系的基础上，用新的相同次序的数据列替换原始数据进行度量型多维尺度分析，用于比对样本组之间的差异。建议每组样本数量不少于5个，否则无法进行绘图。
+P:#,;#本项目以种层级的物种注释做NMDS分析，结果如下：
+Image:upload/*Diversity/Beta/NMDS/*/*NMDS.png,,,NMDS分析
+P:#,;#图中的每个点表示一个样品，不同颜色代表不同分组。
+P:#,;#点与点之间的距离表示差异程度，检验NMDS结果的优劣用胁迫系数（stress）来衡量，此值越小越好，当小于0.2是可以用NMDS的二维点图表示，当stress<0.05时具有很好的代表性。
+P:#,;#NMDS分析下载链接：
+Excel:upload/*Diversity/Beta/NMDS/*/*NMDS.p*,,,NMDS分析下载链接：
+
+
+@@@@anosim
+MainMenu: 组间差异显著性检验
+SubMenu:Anoism分析
+P:#,;#Anosim分析（Analysis of similarities）是一种基于置换检验和秩和检验的非参数检验方法，用来检验组间的差异是否显著大于组内差异，从而判断分组是否有意义。分析结果见下表。
+Table:upload/*Anosim/anosim.stat.xls,,,650,,Anosim组间差异分析
+PRE:,,;
+（1）Group：样本分组信息；
+（2）p：统计检验显著性；
+（3）R：R-value大于0，说明组间差异显著；R-value等于0，说明组间没有差异；R-value小于0，说明组内差异大于组间组间差异；
+PRE
+P:#,;#Anosim组间差异分析下载链接：
+Excel:upload/*Anosim/anosim.stat.xls,5,3,Anosim组间差异分析下载链接：
+
+P:#,;#对上述得到的分析结果，将两两比较组之间的距离值排序获得的秩进行箱线图展示，所有比较组的箱线图，如下：
+Image:upload/*Anosim/anosim.all.png,,,所有比较组Anosim箱线图
+P:#,;#两两比较组箱线图，如下：
+Image:upload/*Anosim/anosim.*.png,,,两两比较组Anosim箱线图
+P:#,;#横坐标：between为组间样本数据结果，其他为组内样本数据结果；纵坐标为样本间距离的秩。
+P:#,;#Anosim箱线图下载链接：
+Excel:upload/*Anosim/anosim.*.pdf,,,Anosim箱线图下载链接：
+
+@@@@diff_analysis
+MainMenu: 差异分析
+SubMenu:差异特征图
+P:#,;#LEfSe（Linear discriminant analysis Effect Size，线性判别分析及影响因子）是用于发现不同生物条件或环境下的两组或多组样本中最能解释组间差异的基因或功能特征，以及这些特征对组间差异的影响程度。 LEfSe 适用于多层次的生物学标识和特征的发现和解释，例如基因、代谢通路、物种分类学谱系等。运用统计学方法进行差异特征发现和显著性检验，软件首先使用非参数系数的 Kruskal-Wallis (KW) sum-rank test 检测组间丰度显著差异的特征，如果组间有相关联的子分组，则再进一步使用(unpaired) Wilcoxon rank-sum test 对上一步的差异特征在子分组中的差异一致性检查，最后运用 LDA 判别分析估计这些差异特征对组间区别的影响大小。
+Image:upload/*Diff/Lefse/*lefse.lda.png,,,差异特征展示图
+P:#,;#通过统计两个组别当中有显著作用的微生物类群通过 LDA 分析（线性回归分析）后获得的 LDA 分值，图中展示了 LDA 分值大于设定值（默认设置为2）的物种，即组间具有统计学差异的Biomarker。
+P:#,;#差异特征展示图下载链接：
+Excel:upload/*Diff/Lefse/*lefse.lda.p*,,,差异特征展示图下载链接：
+
+SubMenu: 差异聚类树
+Image:upload/*Diff/Lefse/*significant_cladogram.png,,,显著差异物种聚类树
+P:#,;#通过对LDA分析中的显著差异物种进行聚类树的绘制，由内至外辐射的圆圈代表了由门至属（或种）的分类级别。在不同分类级别上的每一个小圆圈代表该水平下的一个分类，小圆圈直径大小与相对丰度大小呈正比。图中红色区域和绿色区域表示不同分组，树枝中红色节点表示在红色组别中起到重要作用的微生物类群，绿色节点表示在绿色组别中起到重要作用的微生物类群，黄色节点表示的是在两组中均没有起到重要作用的微生物类群。图中英文字母表示的物种名称在右侧图例中进行展示。
+P:#,;#显著差异物种聚类树下载链接：
+Excel:upload/*Diff/Lefse/*significant_cladogram.p*,,,显著差异物种聚类树下载链接：
+
+@@@@function
+MainMenu:功能预测
+SubMenu:原理介绍
+P:#,;#PICRUSt2 (Phylogenetic Investigation of Communities by Reconstruction of Unobserved States)是一款基于标记基因序列来预测功能丰度的软件。“功能”通常指的是基因家族，如KEGG同源基因和酶分类号，但可以预测任何一个任意的特性。同样，预测通常基于16S rRNA基因测序数据，但也可以使用其他标记基因。
+@@@@pathway
+SubMenu:KEGG通路注释
+P:#,;#KEGG(京都基因与基因组百科全书)是基因组破译方面的数据库。本项目中使用PICRUSt2进行KO注释，并将按照KEGG官网通路（https://www.kegg.jp/kegg/pathway.html）的三级分类，将结果进行汇总统计。示例表如下：   
+Table:upload/*Annotation/Pathway/allsample.pathway.III.stat.xls,3,5,650,,样本通路注释表
+PRE:,,;
+（1）Map：map编号，可以通过https://www.genome.jp/kegg/pathway.html官网查看通路图以及通路不同分类的信息；
+（2）ClassIII：通路三级分类名称；
+（3）ClassII：通路二级分类名称；
+（4）ClassI：通路一级分类名称；
+（5）5-其他列：为样本注释到不同分类上的数量。
+PRE
+P:#,;#所有样本不同等级通路图注释结果表下载链接：
+Excel:upload/*Annotation/Pathway/allsample.pathway.*.stat.xls,,,所有样本注释通路表
+P:#,;#将一级分类结果可视化，如下图：
+Image:upload/*Annotation/Pathway/Plot/*png,,,一级通路图
+PRE:,,;
+横坐标为一级通路名称，纵坐标为注释上该通路类别的ASV数量。
+PRE
+P:#,;#各个样本一级通路图下载链接：
+Excel:upload/*Annotation/Pathway/Plot/*pdf,,,各个样本一级通路图下载链接：
+
+@@@@cog
+SubMenu:COG注释
+P:#,;#COG（Clusters of Orthologous Groups of proteins）即原核生物同源蛋白簇数据库，是原核生物常用的蛋白功能分类数据库。将每个样本注释到COG数据库上的情况进行统计和绘图。
+Table:upload/*Annotation/COG/allsample.cog.stat.xls,3,4,650,,样本COG注释表
+PRE:,,;
+（1）function code：编号；
+（2）function：COG数据库功能名称，可以通过第一列和第二列合并信息在COG数据库中进行查询；
+（3）3-其他列：为样本注释到不同分类上的ASV数量。
+PRE
+P:#,;#按照样本将COG注释结果可视化，如下图：
+Image:upload/*Annotation/COG/Plot/*.cog.png,,,COG注释图
+P:#,;#横坐标为功能类型（对应功能名称见图右边标签），纵坐标为注释上该条目类别的数量。
+P:#,;#COG注释图下载链接：
+Excel:upload/*Annotation/COG/Plot/*.cog.pdf,,,COG注释图下载链接：
+P:#,;#COG注释表下载链接：
+Excel:upload/*Annotation/COG/Sample/*.cog.stat.xls,,,COG注释图下载链接：
+
+@@@@RDA_CCA
+MainMenu:环境因子关联分析
+P:#,;#RDA分析(Redundancy analysis)，即冗余分析。CCA分析(Canonical Correspondence analysis)，即典范对应分析。两者都是基于对应分析（correspondence analysis, CA）发展而来的一种排序方法，将对应分析与多元回归分析相结合，每一步计算均与环境因子进行回归，又称多元直接梯度分析。RDA分析基于线性模型，CCA分析基于单峰模型，主要用来反映菌群或样品与环境因子之间的关系。
+P:#,;#RDA或CCA模型的选择原则：先用物种丰度数据做DCA分析，看分析结果中Lengths of gradient 的第一轴的大小，如果大于4.0，就应该选CCA，如果3.0-4.0之间，选RDA和CCA均可，如果小于3.0，RDA的结果要好于CCA。
+P:#,;#使用R包vegan进行RDA或者CCA分析，并使用ggplot2作图。结果中进行了样品间种水平的物种多样性RDA/CCA分析，分析结果如下：
+Image:upload/*RDA_CCA/*coordinate.png,,,RDA/CCA分析图
+PRE:,,;
+（1）环境向量的长度表示样方物种的分布与该环境因子相关性的大小，长度越长，相关性越大；
+（2）环境向量与约束轴夹角的大小表示环境因子与约束轴相关性的大小，夹角小说明关系密切，若正交则不相关；
+（3）样本点与箭头距离越近，该环境因子对样本的作用越强；
+（4）样本位于箭头同方向，表示环境因子与样本物种群落的变化正相关，样本位于箭头的反方向，表示环境因子与样本物种群落的变化负相关。
+PRE
+P:#,;#RDA/CCA分析图下载链接：
+Excel:upload/*RDA_CCA/*coordinate.p*,,,RDA/CCA分析图下载链接：
+
+@@@@Network
+MainMenu:网络分析
+SubMenu:网络分析
+P:#,;#网络图是相关性分析的一种表现形式，根据各个物种在各个样品中的丰度以及变化情况，进行皮尔森相关系数( pearson )分析，用cutoff＝0.6对相关系数的绝对值进行过滤，构建相关性网络。基于网络图的分析，可以获得物种的共存关系，得到物种在同一环境下的相互作用的情况。网络通常由边和节点构成，一条边由两个节点连接而成，边属性统计结果见下表。
+Table:upload/*Network/Network.edge.xls,4,,650,,网络节点表
+PRE:,,;
+（1）Source：第一个节点名称；
+（2）Target：第二个节点名称；
+（3）weight为两个节点的相关性，绝对值越大相关性越强，正值表示正相关，负值表示负相关。
+PRE
+P:#,;#将上述结果进行可视化，如下图：
+Image:upload/*Network/Network.png,,,网络图
+P:#,;#圈的大小代表该物种在所有样本中都检出的总次数，圈越大，表示检测到该物种的样本越多，反之圈越小，表示检测到该物种的样本越少。
+P:#,;#线条的粗细代表两个物种间的相关性大小（相关系数绝对值），相关性越大，线条越粗，相关性越小，线条越细。
+P:#,;#网络图下载链接：
+Excel:upload/*Network/Network.pdf,,,网络图下载链接：
+@@@@Appendix
+MainMenu:附录
+SubMenu:软件列表
+P:#,;#本次分析所使用的软件见下表：
+Table:upload/public-picture/software.xls,3,3,650,,软件列表
+PRE:,,;
+（1）NO：序号；
+（2）software：软件名称；
+（3）version：版本号；
+（4）function：软件功能；
+（5）para:参数；
+（6）offical_website：软件或包的官方地址。
+PRE
+P:#,;#软件列表下载链接：
+Excel:upload/public-picture/software.xls,,,软件列表下载链接：
+SubMenu:参考文献
+P:#,;#[1]Douglas, G. M. et al. PICRUSt2 for prediction of metagenome functions. Nat Biotechnol 38, 685–688 (2020).
+P:#,;#[2]Bolyen, E. et al. Reproducible, interactive, scalable and extensible microbiome data science using QIIME 2. Nat Biotechnol 37, 852–857 (2019).
+P:#,;#[3]Callahan, B. J. et al. DADA2: High-resolution sample inference from Illumina amplicon data. Nat Methods 13, 581–583 (2016).
+P:#,;#[4]Shen, W., Le, S., Li, Y. & Hu, F. SeqKit: A Cross-Platform and Ultrafast Toolkit for FASTA/Q File Manipulation. PLOS ONE 11, e0163962 (2016).
+P:#,;#[5]Martin, M. Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.journal 17, 10–12 (2011).
+P:#,;#[6]Yilmaz, P. et al. The SILVA and “All-species Living Tree Project (LTP)” taxonomic frameworks. Nucleic Acids Research 42, D643–D648 (2014).
+P:#,;#[7]Parks, D. H. et al. A standardized bacterial taxonomy based on genome phylogeny substantially revises the tree of life. Nat Biotechnol 36, 996–1004 (2018).
+P:#,;#[8]Parks, D. H. et al. A complete domain-to-species taxonomy for Bacteria and Archaea. Nat Biotechnol 38, 1079–1086 (2020).
+P:#,;#[9]Yilmaz, P. et al. The SILVA and “All-species Living Tree Project (LTP)” taxonomic frameworks. Nucleic Acids Research 42, D643–D648 (2014).
+P:#,;#[10]Quast, C. et al. The SILVA ribosomal RNA gene database project: improved data processing and web-based tools. Nucleic Acids Research 41, D590–D596 (2013).
+P:#,;#[11]Cole, J. R. et al. Ribosomal Database Project: data and tools for high throughput rRNA analysis. Nucleic Acids Res 42, D633–D642 (2014).
+P:#,;#[12]O’Leary, N. A. et al. Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation. Nucleic Acids Res 44, 733-745 (2016).
+P:#,;#[13]Bd, O., Nh, B. & Am, P. Interactive metagenomic visualization in a Web browser. BMC bioinformatics 12, (2011).
+P:#,;#[14]McMurdie, P. J. & Holmes, S. phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data. PLOS ONE 8, e61217 (2013).
+P:#,;#[15]Wickham, H. et al. Welcome to the Tidyverse. Journal of Open Source Software 4, 1686 (2019).
+P:#,;#[16]T Wu, E Hu, S Xu, M Chen, P Guo, Z Dai, T Feng, L Zhou, W Tang, L Zhan, X Fu, S Liu, X Bo, and G Yu. clusterProfiler 4.0: A universal enrichment tool for interpreting omics data. The Innovation. 2021, 2(3):100141

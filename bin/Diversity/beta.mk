@@ -92,9 +92,8 @@ PCA:
 	mkdir -p ${outdir}
 	cat ${cmp}|cut -f 1,2 |sed '1iname\tgroup'|sed '2d' >${outdir}/cmp.list
 	${Rscript} ${BIN}/script/pca.r ${infile} ${outdir}/cmp.list ${outdir}/ FALSE
-	${CONVERT} ${outdir}/PCA_analysis/PCA.3d.pdf ${outdir}/PCA_analysis/PCA.3d.png
-	mv ${outdir}/PCA_analysis/PCA_individual_dim1_dim2.pdf ${outdir}/PCA.pdf
-	[ -f ${outdir}/PCA.pdf ] && ${CONVERT} ${outdir}/PCA.pdf ${outdir}/PCA.png || echo no ${outdir}/PCA.pdf
+	[ -f ${outdir}/PCA_analysis/PCA.3d.pdf ] && ${CONVERT} ${outdir}/PCA_analysis/PCA.3d.pdf ${outdir}/PCA_analysis/PCA.3d.png || echo no ${outdir}/PCA_analysis/PCA.3d.pdf
+	[ -f ${outdir}/PCA.pdf ] && mv ${outdir}/PCA_analysis/PCA_individual_dim1_dim2.pdf ${outdir}/PCA.pdf && ${CONVERT} ${outdir}/PCA.pdf ${outdir}/PCA.png || echo no ${outdir}/PCA.pdf
 	[ -f ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf ] && ${CONVERT} ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.png || echo no ${outdir}/PCA_analysis/PCA_variable_dim1_dim2.pdf
 	@echo "===================== Run PCA End at `date` ===================== "
 

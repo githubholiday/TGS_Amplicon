@@ -16,14 +16,15 @@ Help:
 	@echo -e "\t" make -f $(file) infile= outdir= prefix= Krona
 	@echo Parameters:
 	@echo -e "\t" config "\t": 配置文件,软件等配置文件，默认为 config/config.txt文件
-	@echo -e "\t" infile "\t": 输入文件,每一列为物种名称,最后一列为物种的reads数
-	@echo -e "\t" prefix "\t": 输入文件前缀
-	@echo -e "\t" outdir "\t": 输出文件夹,输出prefix.krona.xls和prefix.krona.html
+	@echo -e "\t" asv_freq "\t": asv_freq结果
+	@echo -e "\t" taxonomy "\t": Tax步骤的taxonomy.vsearch.qza文件
+	@echo -e "\t" outdir "\t": 输出文件夹，输出krona_html
 
-Krona:
+.PHONY:krona
+krona:
 	@echo "===================== Run Krona Begin at `date` ===================== "
 	mkdir -p $(outdir)
-	$(PYTHON3) $(BIN)/script/krona_format.py -i $(infile) -o $(outdir)/$(prefix).krona.xls
-	$(ktImportText) $(outdir)/$(prefix).krona.xls -o $(outdir)/$(prefix).krona.html
+	source $(conda_activate) $(qiime2_env)&& $(QIIME2) krona collapse-and-plot --i-table $(asv_freq) --i-taxonomy $(taxonomy) --o-krona-plot $(outdir)/krona.qzv
+	$(QIIME2) tools export --input-path $(outdir)/krona.qzv --output-path $(outdir)/krona_html
 	@echo "===================== Run Krona End at `date` ===================== "
 
